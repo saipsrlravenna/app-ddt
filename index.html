@@ -621,16 +621,60 @@ window.toggleAddForm=function(){const f=document.getElementById('add-form-wrap')
 
 let isRecording=false,recognition=null,micFinalText='',micParsed=null;
 
+function avviaMicrofono(){
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  recognition=new SR();
+  recognition.lang='it-IT';
+  recognition.continuous=false;     // false è più stabile su Android
+  recognition.interimResults=true;
+  recognition.maxAlternatives=1;
+
+  recognition.onresult=(e)=>{
+    let interim='';
+    let finale='';
+    for(let i=e.resultIndex;i<e.results.length;i++){
+      if(e.results[i].isFinal) finale+=e.results[i][0].transcript+' ';
+      else interim+=e.results[i][0].transcript;
+    }
+    if(finale) micFinalText+=finale;
+    const shown=(micFinalText+interim).trim();
+    if(shown){
+      document.getElementById('transcript').textContent=shown;
+      document.getElementById('transcript').style.color='var(--gray-900)';
+    }
+  };
+
+  recognition.onerror=(e)=>{
+    if(e.error==='no-speech'||e.error==='aborted') return;
+    console.log('Mic error:',e.error);
+  };
+
+  recognition.onend=()=>{
+    if(!isRecording) return;
+    // Si è fermato da solo — riavvia dopo breve pausa
+    setTimeout(()=>{
+      if(isRecording){
+        try{ avviaMicrofono(); }catch(err){ stopMic(); }
+      }
+    },150);
+  };
+
+  try{ recognition.start(); }catch(e){ stopMic(); }
+}
+
 window.toggleMic=function(){
   if(!('webkitSpeechRecognition' in window||'SpeechRecognition' in window)){
     document.getElementById('transcript').textContent='Usa Chrome su Android per il riconoscimento vocale.';return;
   }
   if(isRecording){
-    // FERMA
-    recognition&&recognition.stop();
+    // FERMA — l'utente ha toccato per smettere
     isRecording=false;
+    try{ recognition&&recognition.abort(); }catch(e){}
     document.getElementById('mic-btn').classList.remove('recording');
     document.getElementById('mic-label').textContent='Tocca per iniziare a dettare';
+    // Mostra conferma se c'è testo
+    const testo=micFinalText.trim();
+    if(testo.length>2) mostraConferma(testo);
     return;
   }
   // AVVIA
@@ -639,47 +683,10 @@ window.toggleMic=function(){
   micFinalText='';
   document.getElementById('mic-btn').classList.add('recording');
   document.getElementById('mic-label').textContent='🔴 In ascolto — tocca per fermare';
-  document.getElementById('transcript').textContent='...';
+  document.getElementById('transcript').textContent='Parla ora...';
   document.getElementById('transcript').style.color='var(--gray-400)';
-
-  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
-  recognition=new SR();
-  recognition.lang='it-IT';
-  recognition.continuous=true;       // continua ad ascoltare
-  recognition.interimResults=true;   // mostra testo in tempo reale
-  recognition.maxAlternatives=3;     // prova più interpretazioni
-
-  recognition.onresult=(e)=>{
-    let interim='';
-    let final='';
-    for(let i=e.resultIndex;i<e.results.length;i++){
-      if(e.results[i].isFinal) final+=e.results[i][0].transcript+' ';
-      else interim+=e.results[i][0].transcript;
-    }
-    if(final) micFinalText+=final;
-    const displayed=(micFinalText+interim).trim();
-    document.getElementById('transcript').textContent=displayed||'...';
-    document.getElementById('transcript').style.color='var(--gray-900)';
-  };
-
-  recognition.onerror=(e)=>{
-    if(e.error==='no-speech') return; // ignora silenzio
-    document.getElementById('transcript').textContent='Errore: '+e.error+'. Riprova.';
-    stopMic();
-  };
-
-  recognition.onend=()=>{
-    // Se ancora in recording (si è fermato da solo), riavvia
-    if(isRecording){
-      try{ recognition.start(); }catch(e){ stopMic(); }
-    } else {
-      // L'utente ha fermato — mostra conferma
-      const testo=(micFinalText).trim();
-      if(testo.length>2) mostraConferma(testo);
-    }
-  };
-
-  recognition.start();
+  document.getElementById('mic-confirm-wrap').style.display='none';
+  avviaMicrofono();
 };
 
 function stopMic(){
