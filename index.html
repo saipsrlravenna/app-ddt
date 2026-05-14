@@ -293,8 +293,30 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 
     <div class="screen" id="s-ddt-step2">
       <div class="topbar"><button class="topbar-back" onclick="showScreen('s-ddt-step1')"><i class="ti ti-arrow-left"></i></button><h1>Articoli</h1><div class="step-indicator"><div class="step-dot done"></div><div class="step-dot active"></div><div class="step-dot"></div></div></div>
-      <div class="mic-wrap"><button class="mic-btn" id="mic-btn" onclick="toggleMic()"><i class="ti ti-microphone" id="mic-icon"></i></button><div class="mic-label" id="mic-label">Tocca il microfono e detta un articolo</div></div>
-      <div class="transcript-box" id="transcript">Es: "Viti acciaio 6x50 — cento pezzi"</div>
+      <div class="mic-wrap"><button class="mic-btn" id="mic-btn" onclick="toggleMic()"><i class="ti ti-microphone" id="mic-icon"></i></button><div class="mic-label" id="mic-label">Tocca per iniziare a dettare</div></div>
+      <div class="transcript-box" id="transcript" style="font-style:normal;font-size:15px;min-height:48px;color:var(--gray-900)">Es: "Bulloni M10 acciaio inox — 50 pezzi"</div>
+      <div id="mic-confirm-wrap" style="display:none;padding:0 12px;margin-top:8px">
+        <div style="background:var(--blue-light);border-radius:var(--radius-lg);padding:12px 14px;margin-bottom:8px">
+          <div style="font-size:11px;color:var(--blue-dark);font-weight:500;text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px">Ho capito:</div>
+          <div style="font-size:14px;font-weight:600;color:var(--gray-900)" id="mic-desc-preview">—</div>
+          <div style="display:flex;gap:8px;margin-top:8px;align-items:center">
+            <div style="flex:1">
+              <div style="font-size:11px;color:var(--gray-400);margin-bottom:2px">Quantità</div>
+              <input id="mic-qty-input" type="number" min="0" step="any" style="width:100%;border:0.5px solid var(--gray-200);border-radius:var(--radius-sm);padding:6px 8px;font-size:15px;font-weight:600;color:var(--blue-dark);background:white;outline:none">
+            </div>
+            <div style="flex:1">
+              <div style="font-size:11px;color:var(--gray-400);margin-bottom:2px">U.M.</div>
+              <select id="mic-um-input" style="width:100%;border:0.5px solid var(--gray-200);border-radius:var(--radius-sm);padding:6px 8px;font-size:15px;color:var(--gray-900);background:white;outline:none;appearance:none">
+                <option>pz</option><option>kg</option><option>lt</option><option>mt</option><option>m²</option><option>sc</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div style="display:flex;gap:8px">
+          <button onclick="confermaDettatura()" style="flex:1;padding:11px;background:var(--blue);color:white;border:none;border-radius:var(--radius-lg);font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px"><i class="ti ti-check"></i> Aggiungi</button>
+          <button onclick="annullaDettatura()" style="padding:11px 14px;background:white;color:var(--gray-600);border:0.5px solid var(--gray-200);border-radius:var(--radius-lg);font-size:14px;cursor:pointer"><i class="ti ti-x"></i></button>
+        </div>
+      </div>
       <div class="section-label">Articoli inseriti</div>
       <div class="list-card"><div id="art-list"></div></div>
       <button class="btn-add-art" onclick="toggleAddForm()"><i class="ti ti-keyboard"></i> Inserimento manuale</button>
@@ -597,24 +619,132 @@ window.addArticolo=function(){const desc=document.getElementById('art-desc').val
 window.removeArt=function(i){S.ddt.articoli.splice(i,1);renderArtList();};
 window.toggleAddForm=function(){const f=document.getElementById('add-form-wrap');f.style.display=f.style.display==='none'?'block':'none';};
 
-let isRecording=false,recognition=null;
+let isRecording=false,recognition=null,micFinalText='',micParsed=null;
+
 window.toggleMic=function(){
-  if(!('webkitSpeechRecognition' in window||'SpeechRecognition' in window)){document.getElementById('transcript').textContent='Usa Chrome su Android per il riconoscimento vocale.';return;}
-  if(isRecording){recognition&&recognition.stop();isRecording=false;document.getElementById('mic-btn').classList.remove('recording');document.getElementById('mic-label').textContent='Tocca il microfono e detta un articolo';return;}
-  isRecording=true;document.getElementById('mic-btn').classList.add('recording');document.getElementById('mic-label').textContent='In ascolto... parla ora';document.getElementById('transcript').textContent='...';
-  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;recognition=new SR();recognition.lang='it-IT';recognition.interimResults=true;
-  recognition.onresult=(e)=>{const t=Array.from(e.results).map(r=>r[0].transcript).join('');document.getElementById('transcript').textContent=t;if(e.results[e.results.length-1].isFinal)parseVoice(t);};
-  recognition.onend=()=>{isRecording=false;document.getElementById('mic-btn').classList.remove('recording');document.getElementById('mic-label').textContent='Tocca il microfono e detta un articolo';};
+  if(!('webkitSpeechRecognition' in window||'SpeechRecognition' in window)){
+    document.getElementById('transcript').textContent='Usa Chrome su Android per il riconoscimento vocale.';return;
+  }
+  if(isRecording){
+    // FERMA
+    recognition&&recognition.stop();
+    isRecording=false;
+    document.getElementById('mic-btn').classList.remove('recording');
+    document.getElementById('mic-label').textContent='Tocca per iniziare a dettare';
+    return;
+  }
+  // AVVIA
+  annullaDettatura();
+  isRecording=true;
+  micFinalText='';
+  document.getElementById('mic-btn').classList.add('recording');
+  document.getElementById('mic-label').textContent='🔴 In ascolto — tocca per fermare';
+  document.getElementById('transcript').textContent='...';
+  document.getElementById('transcript').style.color='var(--gray-400)';
+
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  recognition=new SR();
+  recognition.lang='it-IT';
+  recognition.continuous=true;       // continua ad ascoltare
+  recognition.interimResults=true;   // mostra testo in tempo reale
+  recognition.maxAlternatives=3;     // prova più interpretazioni
+
+  recognition.onresult=(e)=>{
+    let interim='';
+    let final='';
+    for(let i=e.resultIndex;i<e.results.length;i++){
+      if(e.results[i].isFinal) final+=e.results[i][0].transcript+' ';
+      else interim+=e.results[i][0].transcript;
+    }
+    if(final) micFinalText+=final;
+    const displayed=(micFinalText+interim).trim();
+    document.getElementById('transcript').textContent=displayed||'...';
+    document.getElementById('transcript').style.color='var(--gray-900)';
+  };
+
+  recognition.onerror=(e)=>{
+    if(e.error==='no-speech') return; // ignora silenzio
+    document.getElementById('transcript').textContent='Errore: '+e.error+'. Riprova.';
+    stopMic();
+  };
+
+  recognition.onend=()=>{
+    // Se ancora in recording (si è fermato da solo), riavvia
+    if(isRecording){
+      try{ recognition.start(); }catch(e){ stopMic(); }
+    } else {
+      // L'utente ha fermato — mostra conferma
+      const testo=(micFinalText).trim();
+      if(testo.length>2) mostraConferma(testo);
+    }
+  };
+
   recognition.start();
 };
-function parseVoice(text){
-  const q=text.match(/(\d+[\.,]?\d*)\s*(pezzi?|kg|litri?|lt|metri?|mt|m2|scatol\w*|pz)?/i);
-  let qty=q?parseFloat(q[1].replace(',','.')):1;let um='pz';
-  if(q&&q[2]){const u=q[2].toLowerCase();if(u.startsWith('kg'))um='kg';else if(u.startsWith('l'))um='lt';else if(u.startsWith('m2'))um='m²';else if(u.startsWith('m'))um='mt';else if(u.startsWith('sc'))um='sc';}
-  let desc=text.replace(/(\d+[\.,]?\d*)\s*(pezzi?|kg|litri?|lt|metri?|mt|m2|scatol\w*|pz)?/ig,'').replace(/\s+/g,' ').trim();
-  if(!desc)desc=text.trim();
-  if(desc.length>2){S.ddt.articoli.push({desc,qty,um});renderArtList();document.getElementById('transcript').textContent='✓ '+desc+' — '+qty+' '+um;toast('Articolo aggiunto ✓');}
+
+function stopMic(){
+  isRecording=false;
+  document.getElementById('mic-btn').classList.remove('recording');
+  document.getElementById('mic-label').textContent='Tocca per iniziare a dettare';
 }
+
+function mostraConferma(text){
+  // Parsa testo per trovare quantità e UM
+  const umMap={
+    'pezzi':'pz','pezzo':'pz','pz':'pz',
+    'kg':'kg','chili':'kg','chilo':'kg','chilogrammi':'kg',
+    'litri':'lt','litro':'lt','lt':'lt',
+    'metri':'mt','metro':'mt','mt':'mt',
+    'metri quadri':'m²','metro quadro':'m²','m2':'m²',
+    'scatole':'sc','scatola':'sc','sc':'sc'
+  };
+  // Cerca numero + unità
+  const qReg=/(\d+[\.,]?\d*)\s*(pezzi?|pezzo|kg|chili?|chilogrammi?|litri?|lt|metri?\s*quadri?|metro\s*quadro|m2|metri?|mt|scatol[ae]?|sc|pz)?/i;
+  const q=text.match(qReg);
+  let qty=1,um='pz';
+  if(q&&q[1]) qty=parseFloat(q[1].replace(',','.'));
+  if(q&&q[2]){
+    const u=q[2].toLowerCase().trim();
+    for(const[k,v] of Object.entries(umMap)){if(u.startsWith(k)){um=v;break;}}
+  }
+  // Rimuovi numero e UM dalla descrizione
+  let desc=text
+    .replace(/(\d+[\.,]?\d*)\s*(pezzi?|pezzo|kg|chili?|chilogrammi?|litri?|lt|metri?\s*quadri?|metro\s*quadro|m2|metri?|mt|scatol[ae]?|sc|pz)?/ig,'')
+    .replace(/\s+/g,' ').trim();
+  if(!desc||desc.length<2) desc=text.trim();
+
+  micParsed={desc,qty,um};
+
+  // Mostra pannello di conferma
+  document.getElementById('mic-desc-preview').textContent=desc;
+  document.getElementById('mic-qty-input').value=qty;
+  // Imposta UM
+  const sel=document.getElementById('mic-um-input');
+  for(let i=0;i<sel.options.length;i++){if(sel.options[i].value===um){sel.selectedIndex=i;break;}}
+  document.getElementById('mic-confirm-wrap').style.display='block';
+  document.getElementById('transcript').style.color='var(--gray-400)';
+  document.getElementById('mic-label').textContent='Controlla e aggiungi 👇';
+}
+
+window.confermaDettatura=function(){
+  if(!micParsed)return;
+  const desc=micParsed.desc;
+  const qty=parseFloat(document.getElementById('mic-qty-input').value)||1;
+  const um=document.getElementById('mic-um-input').value;
+  S.ddt.articoli.push({desc,qty,um});
+  renderArtList();
+  toast('✓ '+desc+' — '+qty+' '+um);
+  annullaDettatura();
+  // Reset per prossimo articolo
+  document.getElementById('transcript').textContent='Pronto per il prossimo articolo — tocca il microfono';
+  document.getElementById('transcript').style.color='var(--gray-400)';
+  micFinalText='';
+};
+
+window.annullaDettatura=function(){
+  micParsed=null;
+  document.getElementById('mic-confirm-wrap').style.display='none';
+};
 
 let firmaPainting=false,firmaCtx=null;
 function initFirma(){
