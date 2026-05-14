@@ -5,216 +5,165 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="theme-color" content="#185FA5">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="App DDT">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 <title>App DDT</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
 <style>
-:root {
-  --blue: #185FA5;
-  --blue-light: #E6F1FB;
-  --blue-dark: #0C447C;
-  --green: #25D366;
-  --green-light: #E6F9EE;
-  --red: #E24B4A;
-  --red-light: #FDEAEA;
-  --orange-light: #FEF3E2;
-  --orange: #C97A1A;
-  --gray-50: #F9F9F8;
-  --gray-100: #F0EFE8;
-  --gray-200: #E2E0D8;
-  --gray-400: #9B9890;
-  --gray-600: #5C5A55;
-  --gray-900: #1A1917;
-  --radius-sm: 6px;
-  --radius-md: 10px;
-  --radius-lg: 14px;
-  --shadow: 0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.06);
-}
-* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-html, body { height: 100%; overflow: hidden; }
-body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--gray-50); color: var(--gray-900); }
-
-/* LAYOUT */
-#app { display: flex; flex-direction: column; height: 100dvh; }
-#nav-bar { display: flex; background: white; border-top: 0.5px solid var(--gray-200); order: 2; flex-shrink: 0; padding-bottom: env(safe-area-inset-bottom); }
-#app-logo-bar { display: none; align-items: center; gap: 10px; padding: 8px 16px; background: white; border-bottom: 0.5px solid var(--gray-200); flex-shrink: 0; }
-#app-logo-bar img { height: 30px; object-fit: contain; max-width: 80px; }
-#app-logo-bar span { font-size: 13px; font-weight: 600; color: var(--gray-900); }
-#screens { flex: 1; overflow-y: auto; overflow-x: hidden; -webkit-overflow-scrolling: touch; background: var(--gray-50); }
-
-/* NAV */
-.nav-btn { flex: 1; padding: 8px 4px 6px; border: none; background: none; cursor: pointer; font-size: 10px; color: var(--gray-400); display: flex; flex-direction: column; align-items: center; gap: 2px; transition: color .15s; }
-.nav-btn i { font-size: 22px; }
-.nav-btn.active { color: var(--blue); font-weight: 600; }
-
-/* SCREENS */
-.screen { display: none; min-height: 100%; }
-.screen.active { display: block; }
-
-/* TOPBAR */
-.topbar { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px 12px; background: white; border-bottom: 0.5px solid var(--gray-200); position: sticky; top: 0; z-index: 10; }
-.topbar h1 { font-size: 17px; font-weight: 600; }
-.topbar-back { background: none; border: none; cursor: pointer; font-size: 22px; color: var(--gray-600); padding: 2px; }
-.btn-nav-action { background: var(--blue); color: white; border: none; border-radius: var(--radius-sm); padding: 7px 13px; font-size: 13px; font-weight: 500; cursor: pointer; display: flex; align-items: center; gap: 5px; }
-
-/* STEP INDICATOR */
-.step-indicator { display: flex; align-items: center; gap: 6px; }
-.step-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--gray-200); }
-.step-dot.active { background: var(--blue); }
-.step-dot.done { background: var(--blue-light); border: 1.5px solid var(--blue); }
-
-/* FORMS */
-.section-label { font-size: 11px; color: var(--gray-400); text-transform: uppercase; letter-spacing: .06em; padding: 0 16px; margin: 16px 0 8px; font-weight: 500; }
-.field-group { background: white; border-radius: var(--radius-lg); margin: 0 12px 12px; overflow: hidden; box-shadow: var(--shadow); }
-.field-item { display: flex; flex-direction: column; gap: 3px; padding: 11px 14px; border-bottom: 0.5px solid var(--gray-100); }
-.field-item:last-child { border-bottom: none; }
-.field-item label { font-size: 11px; color: var(--gray-400); font-weight: 500; letter-spacing: .02em; }
-.field-item input, .field-item select { border: none; outline: none; font-size: 15px; color: var(--gray-900); background: transparent; width: 100%; appearance: none; -webkit-appearance: none; }
-.field-item input::placeholder { color: var(--gray-200); }
-.field-row-inline { display: flex; }
-.field-row-inline .field-item { flex: 1; }
-.field-row-inline .field-item:first-child { border-right: 0.5px solid var(--gray-100); border-bottom: none; }
-
-/* BUTTONS */
-.btn-primary { display: flex; align-items: center; justify-content: center; gap: 8px; width: calc(100% - 24px); margin: 0 12px; padding: 14px; background: var(--blue); color: white; border: none; border-radius: var(--radius-lg); font-size: 15px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 8px rgba(24,95,165,.3); }
-.btn-secondary { display: flex; align-items: center; justify-content: center; gap: 8px; width: calc(100% - 24px); margin: 0 12px; padding: 13px; background: white; color: var(--gray-900); border: 0.5px solid var(--gray-200); border-radius: var(--radius-lg); font-size: 15px; font-weight: 500; cursor: pointer; box-shadow: var(--shadow); }
-.btn-whatsapp { display: flex; align-items: center; justify-content: center; gap: 8px; width: calc(100% - 24px); margin: 0 12px; padding: 13px; background: var(--green); color: white; border: none; border-radius: var(--radius-lg); font-size: 15px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 8px rgba(37,211,102,.3); }
-.btn-danger { display: flex; align-items: center; justify-content: center; gap: 8px; width: calc(100% - 24px); margin: 0 12px; padding: 13px; background: white; color: var(--red); border: 0.5px solid var(--red-light); border-radius: var(--radius-lg); font-size: 15px; font-weight: 500; cursor: pointer; }
-.btn-ghost { background: none; border: none; cursor: pointer; color: var(--blue); font-size: 13px; font-weight: 500; padding: 4px 0; display: flex; align-items: center; gap: 4px; }
-.btn-outline { background: none; border: 1px solid var(--blue); color: var(--blue); border-radius: var(--radius-sm); padding: 5px 11px; font-size: 12px; font-weight: 500; cursor: pointer; display: flex; align-items: center; gap: 4px; }
-.spacer { height: 12px; }
-.spacer-lg { height: 24px; }
-
-/* CARDS / LIST ITEMS */
-.list-item { display: flex; align-items: center; gap: 12px; padding: 13px 16px; background: white; border-bottom: 0.5px solid var(--gray-100); cursor: pointer; transition: background .1s; }
-.list-item:active { background: var(--gray-50); }
-.list-item:last-child { border-bottom: none; }
-.list-card { background: white; border-radius: var(--radius-lg); margin: 0 12px 10px; box-shadow: var(--shadow); overflow: hidden; }
-.avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--blue-light); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; color: var(--blue-dark); flex-shrink: 0; }
-.avatar-icon { width: 40px; height: 40px; border-radius: 12px; background: var(--blue-light); display: flex; align-items: center; justify-content: center; font-size: 18px; color: var(--blue); flex-shrink: 0; }
-
-/* BADGES */
-.badge { display: inline-flex; align-items: center; font-size: 10px; padding: 2px 8px; border-radius: 20px; font-weight: 600; letter-spacing: .02em; }
-.badge-success { background: var(--green-light); color: #1A7A3C; }
-.badge-warning { background: var(--orange-light); color: var(--orange); }
-.badge-info { background: var(--blue-light); color: var(--blue-dark); }
-.badge-sede { background: var(--blue-light); color: var(--blue-dark); }
-.badge-magazzino { background: #EAF3DE; color: #27500A; }
-.badge-cantiere { background: #FAEEDA; color: #633806; }
-.badge-altro { background: var(--gray-100); color: var(--gray-600); }
-
-/* NOTIF TOAST */
-.toast { position: fixed; top: 60px; left: 50%; transform: translateX(-50%) translateY(-20px); background: var(--gray-900); color: white; padding: 10px 18px; border-radius: 20px; font-size: 13px; font-weight: 500; opacity: 0; transition: all .25s; z-index: 100; white-space: nowrap; pointer-events: none; }
-.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-
-/* SEARCH */
-.search-wrap { margin: 0 12px 10px; background: white; border-radius: var(--radius-lg); display: flex; align-items: center; gap: 8px; padding: 10px 14px; box-shadow: var(--shadow); }
-.search-wrap input { border: none; outline: none; flex: 1; font-size: 14px; color: var(--gray-900); background: transparent; }
-.search-wrap i { font-size: 16px; color: var(--gray-400); }
-
-/* MICROFONO */
-.mic-wrap { text-align: center; padding: 16px 16px 8px; }
-.mic-btn { width: 64px; height: 64px; border-radius: 50%; background: var(--blue-light); border: none; cursor: pointer; margin: 0 auto; display: flex; align-items: center; justify-content: center; transition: all .15s; box-shadow: 0 2px 12px rgba(24,95,165,.2); }
-.mic-btn i { font-size: 26px; color: var(--blue); }
-.mic-btn.recording { background: var(--red); box-shadow: 0 2px 16px rgba(226,75,74,.4); animation: pulse 1s infinite; }
-.mic-btn.recording i { color: white; }
-@keyframes pulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.07)} }
-.mic-label { font-size: 12px; color: var(--gray-400); margin-top: 8px; }
-.transcript-box { background: white; border-radius: var(--radius-md); padding: 10px 14px; margin: 8px 12px 0; font-size: 13px; color: var(--gray-600); min-height: 36px; font-style: italic; box-shadow: var(--shadow); }
-
-/* ARTICOLI */
-.art-row { display: flex; align-items: center; gap: 10px; padding: 11px 14px; border-bottom: 0.5px solid var(--gray-100); }
-.art-row:last-child { border-bottom: none; }
-.art-desc { flex: 2; font-size: 14px; }
-.art-qty { font-size: 14px; font-weight: 600; color: var(--blue-dark); }
-.art-um { font-size: 12px; color: var(--gray-400); width: 24px; }
-.art-del { background: none; border: none; cursor: pointer; color: var(--gray-400); font-size: 18px; padding: 2px; }
-.btn-add-art { display: flex; align-items: center; justify-content: center; gap: 6px; margin: 0 12px 10px; padding: 11px; background: white; border: 1.5px dashed var(--gray-200); border-radius: var(--radius-lg); font-size: 13px; color: var(--gray-600); cursor: pointer; }
-
-/* LOGO UPLOAD */
-.logo-upload-zone { margin: 0 12px 12px; border: 2px dashed var(--gray-200); border-radius: var(--radius-lg); padding: 28px 20px; text-align: center; cursor: pointer; background: white; transition: border-color .2s; }
-.logo-upload-zone:active { border-color: var(--blue); }
-.logo-preview-card { margin: 0 12px 12px; background: white; border-radius: var(--radius-lg); padding: 14px; display: flex; align-items: center; gap: 14px; box-shadow: var(--shadow); }
-.logo-preview-card img { width: 64px; height: 64px; object-fit: contain; border-radius: var(--radius-md); border: 0.5px solid var(--gray-200); background: white; }
-
-/* FIRMA */
-#firma-canvas { border-radius: var(--radius-lg); background: white; touch-action: none; display: block; box-shadow: var(--shadow); }
-
-/* ANTEPRIMA DDT */
-.preview-header { display: flex; align-items: flex-start; justify-content: space-between; padding: 16px; background: white; border-radius: var(--radius-lg); margin: 0 12px 10px; box-shadow: var(--shadow); }
-.preview-logo { width: 60px; height: 60px; object-fit: contain; border-radius: var(--radius-sm); }
-.preview-table { width: calc(100% - 24px); margin: 0 12px 10px; border-collapse: collapse; background: white; border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow); }
-.preview-table th { background: var(--gray-50); padding: 8px 12px; text-align: left; font-size: 11px; color: var(--gray-400); font-weight: 500; text-transform: uppercase; letter-spacing: .04em; }
-.preview-table td { padding: 9px 12px; font-size: 13px; border-bottom: 0.5px solid var(--gray-100); }
-.preview-table tr:last-child td { border-bottom: none; }
-.preview-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 0 12px 10px; }
-.preview-box { background: white; border-radius: var(--radius-md); padding: 10px 12px; box-shadow: var(--shadow); }
-.preview-box .pb-label { font-size: 10px; color: var(--gray-400); text-transform: uppercase; letter-spacing: .05em; margin-bottom: 3px; font-weight: 500; }
-.preview-box .pb-val { font-size: 13px; font-weight: 500; }
-
-/* STORICO */
-.ddt-list-item { display: flex; align-items: center; gap: 12px; padding: 13px 16px; background: white; border-bottom: 0.5px solid var(--gray-100); cursor: pointer; }
-.ddt-num { font-size: 15px; font-weight: 600; }
-.ddt-sub { font-size: 12px; color: var(--gray-400); margin-top: 1px; }
-
-/* TIPO LUOGO SELECTOR */
-.tipo-selector { display: flex; gap: 6px; padding: 0 12px; margin-bottom: 12px; flex-wrap: wrap; }
-.tipo-btn { padding: 6px 14px; border-radius: 20px; font-size: 13px; cursor: pointer; border: 1px solid var(--gray-200); background: white; color: var(--gray-600); font-weight: 500; transition: all .15s; }
-.tipo-btn.sel { background: var(--blue); color: white; border-color: var(--blue); }
-
-/* EMPTY STATE */
-.empty-state { text-align: center; padding: 48px 24px; color: var(--gray-400); }
-.empty-state i { font-size: 40px; display: block; margin-bottom: 12px; opacity: .4; }
-.empty-state p { font-size: 14px; }
-
-/* INLINE ROW ACTIONS */
-.row-actions { display: flex; gap: 6px; padding: 6px 16px 10px 68px; }
-.row-act-btn { padding: 5px 12px; border-radius: 20px; font-size: 11px; cursor: pointer; border: 0.5px solid var(--gray-200); background: none; color: var(--gray-600); font-weight: 500; }
-.row-act-btn.danger { color: var(--red); border-color: #FECACA; }
-
-/* DIVIDER */
-.divider { height: 0.5px; background: var(--gray-200); margin: 4px 0; }
-
-/* FIRMA SECTION */
-.firma-wrap { margin: 0 12px; }
-.firma-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 8px; }
-.firma-preview { width: 100%; height: 80px; object-fit: contain; border-radius: var(--radius-md); border: 0.5px solid var(--gray-200); background: white; }
-
-/* CONTACT CHIP */
-.contact-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; border-bottom: 0.5px solid var(--gray-100); }
-.contact-row:last-child { border-bottom: none; }
+:root{--blue:#185FA5;--blue-light:#E6F1FB;--blue-dark:#0C447C;--green:#25D366;--green-light:#E6F9EE;--red:#E24B4A;--red-light:#FDEAEA;--orange-light:#FEF3E2;--orange:#C97A1A;--gray-50:#F9F9F8;--gray-100:#F0EFE8;--gray-200:#E2E0D8;--gray-400:#9B9890;--gray-600:#5C5A55;--gray-900:#1A1917;--radius-sm:6px;--radius-md:10px;--radius-lg:14px;--shadow:0 1px 3px rgba(0,0,0,.08)}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;overflow:hidden}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--gray-50);color:var(--gray-900)}
+#app{display:flex;flex-direction:column;height:100dvh}
+#nav-bar{display:flex;background:white;border-top:0.5px solid var(--gray-200);order:2;flex-shrink:0;padding-bottom:env(safe-area-inset-bottom)}
+#app-logo-bar{display:none;align-items:center;gap:10px;padding:8px 16px;background:white;border-bottom:0.5px solid var(--gray-200);flex-shrink:0}
+#app-logo-bar img{height:30px;object-fit:contain;max-width:80px}
+#app-logo-bar span{font-size:13px;font-weight:600}
+#screens{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;background:var(--gray-50)}
+.nav-btn{flex:1;padding:8px 4px 6px;border:none;background:none;cursor:pointer;font-size:10px;color:var(--gray-400);display:flex;flex-direction:column;align-items:center;gap:2px}
+.nav-btn i{font-size:22px}
+.nav-btn.active{color:var(--blue);font-weight:600}
+.screen{display:none;min-height:100%}
+.screen.active{display:block}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:14px 16px 12px;background:white;border-bottom:0.5px solid var(--gray-200);position:sticky;top:0;z-index:10}
+.topbar h1{font-size:17px;font-weight:600}
+.topbar-back{background:none;border:none;cursor:pointer;font-size:22px;color:var(--gray-600);padding:2px}
+.btn-nav-action{background:var(--blue);color:white;border:none;border-radius:var(--radius-sm);padding:7px 13px;font-size:13px;font-weight:500;cursor:pointer;display:flex;align-items:center;gap:5px}
+.step-indicator{display:flex;align-items:center;gap:6px}
+.step-dot{width:7px;height:7px;border-radius:50%;background:var(--gray-200)}
+.step-dot.active{background:var(--blue)}
+.step-dot.done{background:var(--blue-light);border:1.5px solid var(--blue)}
+.section-label{font-size:11px;color:var(--gray-400);text-transform:uppercase;letter-spacing:.06em;padding:0 16px;margin:16px 0 8px;font-weight:500}
+.field-group{background:white;border-radius:var(--radius-lg);margin:0 12px 12px;overflow:hidden;box-shadow:var(--shadow)}
+.field-item{display:flex;flex-direction:column;gap:3px;padding:11px 14px;border-bottom:0.5px solid var(--gray-100)}
+.field-item:last-child{border-bottom:none}
+.field-item label{font-size:11px;color:var(--gray-400);font-weight:500;letter-spacing:.02em}
+.field-item input,.field-item select{border:none;outline:none;font-size:15px;color:var(--gray-900);background:transparent;width:100%;appearance:none;-webkit-appearance:none}
+.field-item input::placeholder{color:var(--gray-200)}
+.field-row-inline{display:flex}
+.field-row-inline .field-item{flex:1}
+.field-row-inline .field-item:first-child{border-right:0.5px solid var(--gray-100);border-bottom:none}
+.btn-primary{display:flex;align-items:center;justify-content:center;gap:8px;width:calc(100% - 24px);margin:0 12px;padding:14px;background:var(--blue);color:white;border:none;border-radius:var(--radius-lg);font-size:15px;font-weight:600;cursor:pointer;box-shadow:0 2px 8px rgba(24,95,165,.3)}
+.btn-secondary{display:flex;align-items:center;justify-content:center;gap:8px;width:calc(100% - 24px);margin:0 12px;padding:13px;background:white;color:var(--gray-900);border:0.5px solid var(--gray-200);border-radius:var(--radius-lg);font-size:15px;font-weight:500;cursor:pointer;box-shadow:var(--shadow)}
+.btn-whatsapp{display:flex;align-items:center;justify-content:center;gap:8px;width:calc(100% - 24px);margin:0 12px;padding:13px;background:var(--green);color:white;border:none;border-radius:var(--radius-lg);font-size:15px;font-weight:600;cursor:pointer}
+.btn-ghost{background:none;border:none;cursor:pointer;color:var(--blue);font-size:13px;font-weight:500;padding:4px 0;display:flex;align-items:center;gap:4px}
+.btn-outline{background:none;border:1px solid var(--blue);color:var(--blue);border-radius:var(--radius-sm);padding:5px 11px;font-size:12px;font-weight:500;cursor:pointer;display:flex;align-items:center;gap:4px}
+.spacer{height:12px}.spacer-lg{height:24px}
+.list-item{display:flex;align-items:center;gap:12px;padding:13px 16px;background:white;border-bottom:0.5px solid var(--gray-100);cursor:pointer}
+.list-item:last-child{border-bottom:none}
+.list-card{background:white;border-radius:var(--radius-lg);margin:0 12px 10px;box-shadow:var(--shadow);overflow:hidden}
+.avatar{width:40px;height:40px;border-radius:50%;background:var(--blue-light);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;color:var(--blue-dark);flex-shrink:0}
+.avatar-icon{width:40px;height:40px;border-radius:12px;background:var(--blue-light);display:flex;align-items:center;justify-content:center;font-size:18px;color:var(--blue);flex-shrink:0}
+.badge{display:inline-flex;align-items:center;font-size:10px;padding:2px 8px;border-radius:20px;font-weight:600}
+.badge-success{background:var(--green-light);color:#1A7A3C}
+.badge-warning{background:var(--orange-light);color:var(--orange)}
+.badge-sede{background:var(--blue-light);color:var(--blue-dark)}
+.badge-magazzino{background:#EAF3DE;color:#27500A}
+.badge-cantiere{background:#FAEEDA;color:#633806}
+.badge-altro{background:var(--gray-100);color:var(--gray-600)}
+.toast{position:fixed;top:60px;left:50%;transform:translateX(-50%) translateY(-20px);background:var(--gray-900);color:white;padding:10px 18px;border-radius:20px;font-size:13px;font-weight:500;opacity:0;transition:all .25s;z-index:100;white-space:nowrap;pointer-events:none}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.search-wrap{margin:0 12px 10px;background:white;border-radius:var(--radius-lg);display:flex;align-items:center;gap:8px;padding:10px 14px;box-shadow:var(--shadow)}
+.search-wrap input{border:none;outline:none;flex:1;font-size:14px;color:var(--gray-900);background:transparent}
+.search-wrap i{font-size:16px;color:var(--gray-400)}
+.mic-wrap{text-align:center;padding:16px 16px 8px}
+.mic-btn{width:64px;height:64px;border-radius:50%;background:var(--blue-light);border:none;cursor:pointer;margin:0 auto;display:flex;align-items:center;justify-content:center;transition:all .15s;box-shadow:0 2px 12px rgba(24,95,165,.2)}
+.mic-btn i{font-size:26px;color:var(--blue)}
+.mic-btn.recording{background:var(--red);animation:pulse 1s infinite}
+.mic-btn.recording i{color:white}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.07)}}
+.mic-label{font-size:12px;color:var(--gray-400);margin-top:8px}
+.transcript-box{background:white;border-radius:var(--radius-md);padding:10px 14px;margin:8px 12px 0;font-size:13px;color:var(--gray-600);min-height:36px;font-style:italic;box-shadow:var(--shadow)}
+.art-row{display:flex;align-items:center;gap:10px;padding:11px 14px;border-bottom:0.5px solid var(--gray-100)}
+.art-row:last-child{border-bottom:none}
+.art-desc{flex:2;font-size:14px}
+.art-qty{font-size:14px;font-weight:600;color:var(--blue-dark)}
+.art-um{font-size:12px;color:var(--gray-400);width:24px}
+.art-del{background:none;border:none;cursor:pointer;color:var(--gray-400);font-size:18px;padding:2px}
+.btn-add-art{display:flex;align-items:center;justify-content:center;gap:6px;margin:0 12px 10px;padding:11px;background:white;border:1.5px dashed var(--gray-200);border-radius:var(--radius-lg);font-size:13px;color:var(--gray-600);cursor:pointer}
+.logo-upload-zone{margin:0 12px 12px;border:2px dashed var(--gray-200);border-radius:var(--radius-lg);padding:28px 20px;text-align:center;cursor:pointer;background:white}
+.logo-preview-card{margin:0 12px 12px;background:white;border-radius:var(--radius-lg);padding:14px;display:flex;align-items:center;gap:14px;box-shadow:var(--shadow)}
+.logo-preview-card img{width:64px;height:64px;object-fit:contain;border-radius:var(--radius-md);border:0.5px solid var(--gray-200);background:white}
+#firma-canvas{border-radius:var(--radius-lg);background:white;touch-action:none;display:block;box-shadow:var(--shadow)}
+.preview-header{display:flex;align-items:flex-start;justify-content:space-between;padding:16px;background:white;border-radius:var(--radius-lg);margin:0 12px 10px;box-shadow:var(--shadow)}
+.preview-table{width:calc(100% - 24px);margin:0 12px 10px;border-collapse:collapse;background:white;border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow)}
+.preview-table th{background:var(--gray-50);padding:8px 12px;text-align:left;font-size:11px;color:var(--gray-400);font-weight:500;text-transform:uppercase;letter-spacing:.04em}
+.preview-table td{padding:9px 12px;font-size:13px;border-bottom:0.5px solid var(--gray-100)}
+.preview-table tr:last-child td{border-bottom:none}
+.preview-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:0 12px 10px}
+.preview-box{background:white;border-radius:var(--radius-md);padding:10px 12px;box-shadow:var(--shadow)}
+.preview-box .pb-label{font-size:10px;color:var(--gray-400);text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px;font-weight:500}
+.preview-box .pb-val{font-size:13px;font-weight:500}
+.ddt-list-item{display:flex;align-items:center;gap:12px;padding:13px 16px;background:white;border-bottom:0.5px solid var(--gray-100);cursor:pointer}
+.tipo-selector{display:flex;gap:6px;padding:0 12px;margin-bottom:12px;flex-wrap:wrap}
+.tipo-btn{padding:6px 14px;border-radius:20px;font-size:13px;cursor:pointer;border:1px solid var(--gray-200);background:white;color:var(--gray-600);font-weight:500}
+.tipo-btn.sel{background:var(--blue);color:white;border-color:var(--blue)}
+.empty-state{text-align:center;padding:48px 24px;color:var(--gray-400)}
+.empty-state i{font-size:40px;display:block;margin-bottom:12px;opacity:.4}
+.empty-state p{font-size:14px}
+.row-actions{display:flex;gap:6px;padding:6px 16px 10px 68px}
+.row-act-btn{padding:5px 12px;border-radius:20px;font-size:11px;cursor:pointer;border:0.5px solid var(--gray-200);background:none;color:var(--gray-600);font-weight:500}
+.row-act-btn.danger{color:var(--red);border-color:#FECACA}
+.contact-row{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:0.5px solid var(--gray-100)}
+.contact-row:last-child{border-bottom:none}
+.login-wrap{display:flex;flex-direction:column;justify-content:center;align-items:center;min-height:100dvh;padding:32px 24px;background:var(--gray-50)}
+.login-logo{width:72px;height:72px;background:var(--blue);border-radius:20px;display:flex;align-items:center;justify-content:center;margin-bottom:24px}
+.login-logo i{font-size:36px;color:white}
+.login-title{font-size:24px;font-weight:700;margin-bottom:6px;text-align:center}
+.login-sub{font-size:14px;color:var(--gray-400);margin-bottom:32px;text-align:center}
+.login-form{width:100%;max-width:360px}
+.login-field{background:white;border-radius:var(--radius-lg);margin-bottom:10px;padding:12px 16px;box-shadow:var(--shadow)}
+.login-field label{font-size:11px;color:var(--gray-400);font-weight:500;text-transform:uppercase;letter-spacing:.04em;display:block;margin-bottom:4px}
+.login-field input{border:none;outline:none;font-size:16px;color:var(--gray-900);width:100%;background:transparent}
+.login-btn{width:100%;padding:14px;background:var(--blue);color:white;border:none;border-radius:var(--radius-lg);font-size:16px;font-weight:600;cursor:pointer;margin-top:8px;box-shadow:0 2px 8px rgba(24,95,165,.3)}
+.login-err{color:var(--red);font-size:13px;text-align:center;margin-top:12px;min-height:20px}
+.login-switch{text-align:center;margin-top:20px;font-size:14px;color:var(--gray-400)}
+.login-switch a{color:var(--blue);font-weight:500;cursor:pointer;text-decoration:none}
+.user-bar{display:flex;align-items:center;justify-content:space-between;padding:8px 16px;background:var(--blue-light);border-bottom:0.5px solid var(--gray-200)}
+.user-bar span{font-size:12px;color:var(--blue-dark);font-weight:500}
+.user-bar button{background:none;border:none;cursor:pointer;font-size:12px;color:var(--blue);font-weight:500}
+.loading-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100dvh;gap:16px}
+.spinner{width:36px;height:36px;border:3px solid var(--gray-200);border-top-color:var(--blue);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
 </style>
 </head>
 <body>
-<div id="app">
-  <!-- LOGO BAR -->
-  <div id="app-logo-bar">
-    <img id="alb-img" src="" alt="Logo">
-    <span id="alb-nome"></span>
-  </div>
 
-  <!-- SCREENS -->
+<div id="loading-screen" class="loading-wrap">
+  <div class="spinner"></div>
+  <div style="font-size:14px;color:var(--gray-400)">Caricamento...</div>
+</div>
+
+<div id="login-screen" style="display:none">
+  <div class="login-wrap">
+    <div class="login-logo"><i class="ti ti-file-text"></i></div>
+    <div class="login-title">App DDT</div>
+    <div class="login-sub" id="login-subtitle">Accedi al tuo account aziendale</div>
+    <div class="login-form">
+      <div class="login-field"><label>Email</label><input type="email" id="login-email" placeholder="nome@azienda.it" autocomplete="email"></div>
+      <div class="login-field"><label>Password</label><input type="password" id="login-password" placeholder="••••••••" autocomplete="current-password"></div>
+      <div class="login-field" id="field-nome" style="display:none"><label>Il tuo nome</label><input type="text" id="login-nome" placeholder="Es. Mario Rossi"></div>
+      <button class="login-btn" id="login-btn" onclick="doLogin()">Accedi</button>
+      <div class="login-err" id="login-err"></div>
+      <div class="login-switch"><span id="switch-text">Non hai un account? </span><a onclick="toggleLoginMode()" id="switch-link">Registrati</a></div>
+    </div>
+  </div>
+</div>
+
+<div id="app" style="display:none">
+  <div id="app-logo-bar"><img id="alb-img" src="" alt="Logo"><span id="alb-nome"></span></div>
+  <div class="user-bar"><span id="user-email-bar">👤 </span><button onclick="doLogout()"><i class="ti ti-logout" style="font-size:14px;vertical-align:-2px"></i> Esci</button></div>
   <div id="screens">
 
-    <!-- ===== STORICO DDT ===== -->
     <div class="screen active" id="s-lista">
-      <div class="topbar">
-        <h1>I miei DDT</h1>
-        <button class="btn-nav-action" onclick="nuovoDDT()"><i class="ti ti-plus"></i> Nuovo</button>
-      </div>
+      <div class="topbar"><h1>I miei DDT</h1><button class="btn-nav-action" onclick="nuovoDDT()"><i class="ti ti-plus"></i> Nuovo</button></div>
       <div class="spacer"></div>
-      <div class="search-wrap">
-        <i class="ti ti-search"></i>
-        <input type="text" id="search-storico" placeholder="Cerca per numero, cliente..." oninput="renderStorico()">
-      </div>
+      <div class="search-wrap"><i class="ti ti-search"></i><input type="text" id="search-storico" placeholder="Cerca per numero, cliente..." oninput="renderStorico()"></div>
       <div id="storico-list"></div>
       <div class="spacer-lg"></div>
     </div>
 
-    <!-- ===== AZIENDA ===== -->
     <div class="screen" id="s-azienda">
       <div class="topbar"><h1>La mia azienda</h1><span></span></div>
       <div class="section-label">Logo aziendale</div>
@@ -229,10 +178,10 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
       </div>
       <div id="logo-prev-zone" style="display:none">
         <div class="logo-preview-card">
-          <img id="logo-prev-img" src="" alt="Logo azienda">
+          <img id="logo-prev-img" src="" alt="Logo">
           <div style="flex:1">
             <div style="font-size:14px;font-weight:600;margin-bottom:4px">Logo caricato ✓</div>
-            <div style="font-size:12px;color:var(--gray-400);margin-bottom:10px">Appare in alto nell'app e nel DDT stampato</div>
+            <div style="font-size:12px;color:var(--gray-400);margin-bottom:10px">Appare nell'app e nel DDT stampato</div>
             <button onclick="rimuoviLogo()" style="background:none;border:0.5px solid var(--red-light);color:var(--red);border-radius:var(--radius-sm);padding:5px 10px;font-size:12px;cursor:pointer;display:flex;align-items:center;gap:4px"><i class="ti ti-trash" style="font-size:14px"></i> Rimuovi</button>
           </div>
         </div>
@@ -250,30 +199,16 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
       <div class="spacer-lg"></div>
     </div>
 
-    <!-- ===== LUOGHI ===== -->
     <div class="screen" id="s-luoghi">
-      <div class="topbar">
-        <h1>I miei luoghi</h1>
-        <button class="btn-nav-action" onclick="apriFrmLuogo(null)"><i class="ti ti-plus"></i> Nuovo</button>
-      </div>
+      <div class="topbar"><h1>I miei luoghi</h1><button class="btn-nav-action" onclick="apriFrmLuogo(null)"><i class="ti ti-plus"></i> Nuovo</button></div>
       <div class="spacer"></div>
       <div id="luoghi-list"></div>
-      <div style="margin:0 12px">
-        <div style="background:var(--blue-light);border-radius:var(--radius-md);padding:10px 12px;font-size:12px;color:var(--blue-dark)">
-          <i class="ti ti-info-circle" style="vertical-align:-2px;margin-right:4px"></i>
-          Salva sede, magazzino e cantieri. Nel DDT potrai sceglierli con un tocco.
-        </div>
-      </div>
+      <div style="margin:0 12px"><div style="background:var(--blue-light);border-radius:var(--radius-md);padding:10px 12px;font-size:12px;color:var(--blue-dark)"><i class="ti ti-info-circle" style="vertical-align:-2px;margin-right:4px"></i>Salva sede, magazzino e cantieri. Nel DDT potrai sceglierli con un tocco.</div></div>
       <div class="spacer-lg"></div>
     </div>
 
-    <!-- ===== FORM LUOGO ===== -->
     <div class="screen" id="s-frm-luogo">
-      <div class="topbar">
-        <button class="topbar-back" onclick="showScreen('s-luoghi')"><i class="ti ti-arrow-left"></i></button>
-        <h1 id="frm-luogo-title">Nuovo luogo</h1>
-        <span></span>
-      </div>
+      <div class="topbar"><button class="topbar-back" onclick="showScreen('s-luoghi')"><i class="ti ti-arrow-left"></i></button><h1 id="frm-luogo-title">Nuovo luogo</h1><span></span></div>
       <div class="section-label">Tipo di luogo</div>
       <div class="tipo-selector">
         <button class="tipo-btn sel" id="tb-sede" onclick="selTipoLuogo('sede')">Sede</button>
@@ -282,37 +217,25 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
         <button class="tipo-btn" id="tb-altro" onclick="selTipoLuogo('altro')">Altro</button>
       </div>
       <div class="field-group">
-        <div class="field-item"><label>Nome / Etichetta</label><input id="l-nome" type="text" placeholder="Es. Magazzino Nord, Cantiere Via Verdi"></div>
+        <div class="field-item"><label>Nome / Etichetta</label><input id="l-nome" type="text" placeholder="Es. Magazzino Nord"></div>
         <div class="field-item"><label>Indirizzo completo</label><input id="l-indirizzo" type="text" placeholder="Via Verdi 5, Ravenna"></div>
-        <div class="field-item"><label>Note (facoltativo)</label><input id="l-note" type="text" placeholder="Interno 3, citofono rosso..."></div>
+        <div class="field-item"><label>Note (facoltativo)</label><input id="l-note" type="text" placeholder="Interno 3..."></div>
       </div>
       <div class="spacer"></div>
       <button class="btn-primary" onclick="salvaLuogo()"><i class="ti ti-device-floppy"></i> Salva luogo</button>
       <div class="spacer-lg"></div>
     </div>
 
-    <!-- ===== RUBRICA ===== -->
     <div class="screen" id="s-rubrica">
-      <div class="topbar">
-        <h1>Rubrica clienti</h1>
-        <button class="btn-nav-action" onclick="apriFrmCliente(null)"><i class="ti ti-plus"></i> Nuovo</button>
-      </div>
+      <div class="topbar"><h1>Rubrica clienti</h1><button class="btn-nav-action" onclick="apriFrmCliente(null)"><i class="ti ti-plus"></i> Nuovo</button></div>
       <div class="spacer"></div>
-      <div class="search-wrap">
-        <i class="ti ti-search"></i>
-        <input type="text" id="search-cli" placeholder="Cerca cliente..." oninput="renderRubrica()">
-      </div>
+      <div class="search-wrap"><i class="ti ti-search"></i><input type="text" id="search-cli" placeholder="Cerca cliente..." oninput="renderRubrica()"></div>
       <div id="rubrica-list"></div>
       <div class="spacer-lg"></div>
     </div>
 
-    <!-- ===== FORM CLIENTE ===== -->
     <div class="screen" id="s-frm-cliente">
-      <div class="topbar">
-        <button class="topbar-back" onclick="showScreen('s-rubrica')"><i class="ti ti-arrow-left"></i></button>
-        <h1 id="frm-cli-title">Nuovo cliente</h1>
-        <span></span>
-      </div>
+      <div class="topbar"><button class="topbar-back" onclick="showScreen('s-rubrica')"><i class="ti ti-arrow-left"></i></button><h1 id="frm-cli-title">Nuovo cliente</h1><span></span></div>
       <div class="field-group" style="margin-top:16px">
         <div class="field-item"><label>Ragione sociale</label><input id="c-nome" type="text" placeholder="Rossi S.r.l."></div>
         <div class="field-item"><label>P. IVA</label><input id="c-piva" type="text" placeholder="IT012345678"></div>
@@ -326,43 +249,22 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
       <div class="spacer-lg"></div>
     </div>
 
-    <!-- ===== SCEGLI CLIENTE (nel DDT) ===== -->
     <div class="screen" id="s-scegli-cli">
-      <div class="topbar">
-        <button class="topbar-back" onclick="showScreen('s-ddt-step1')"><i class="ti ti-arrow-left"></i></button>
-        <h1>Scegli cliente</h1>
-        <span></span>
-      </div>
+      <div class="topbar"><button class="topbar-back" onclick="showScreen('s-ddt-step1')"><i class="ti ti-arrow-left"></i></button><h1>Scegli cliente</h1><span></span></div>
       <div class="spacer"></div>
-      <div class="search-wrap">
-        <i class="ti ti-search"></i>
-        <input type="text" id="search-scegli-cli" placeholder="Cerca..." oninput="renderScegliCli()">
-      </div>
+      <div class="search-wrap"><i class="ti ti-search"></i><input type="text" id="search-scegli-cli" placeholder="Cerca..." oninput="renderScegliCli()"></div>
       <div id="scegli-cli-list"></div>
       <div class="spacer"></div>
-      <button class="btn-secondary" onclick="apriFrmCliente(null);document.getElementById('frm-cli-back-target').value='s-scegli-cli'">
-        <i class="ti ti-plus"></i> Aggiungi nuovo cliente
-      </button>
-      <input type="hidden" id="frm-cli-back-target" value="s-rubrica">
+      <button class="btn-secondary" onclick="apriFrmCliente(null)"><i class="ti ti-plus"></i> Aggiungi nuovo cliente</button>
       <div class="spacer-lg"></div>
     </div>
 
-    <!-- ===== SCEGLI LUOGO (nel DDT) ===== -->
     <div class="screen" id="s-scegli-luogo">
-      <div class="topbar">
-        <button class="topbar-back" onclick="showScreen('s-ddt-step1')"><i class="ti ti-arrow-left"></i></button>
-        <h1 id="scegli-luogo-title">Luogo di partenza</h1>
-        <span></span>
-      </div>
+      <div class="topbar"><button class="topbar-back" onclick="showScreen('s-ddt-step1')"><i class="ti ti-arrow-left"></i></button><h1 id="scegli-luogo-title">Luogo di partenza</h1><span></span></div>
       <div class="spacer"></div>
       <div id="scegli-luogo-list"></div>
       <div class="section-label">Oppure scrivi un indirizzo</div>
-      <div class="field-group">
-        <div class="field-item">
-          <label>Indirizzo libero</label>
-          <input id="luogo-libero-input" type="text" placeholder="Es. Cantiere Via Nuova 3, Ravenna">
-        </div>
-      </div>
+      <div class="field-group"><div class="field-item"><label>Indirizzo libero</label><input id="luogo-libero-input" type="text" placeholder="Es. Cantiere Via Nuova 3"></div></div>
       <div class="spacer"></div>
       <button class="btn-primary" onclick="confermaLuogoLibero()"><i class="ti ti-check"></i> Usa questo indirizzo</button>
       <div class="spacer"></div>
@@ -370,214 +272,67 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
       <div class="spacer-lg"></div>
     </div>
 
-    <!-- ===== DDT STEP 1 ===== -->
     <div class="screen" id="s-ddt-step1">
-      <div class="topbar">
-        <button class="topbar-back" onclick="showScreen('s-lista')"><i class="ti ti-arrow-left"></i></button>
-        <h1>Nuovo DDT</h1>
-        <div class="step-indicator">
-          <div class="step-dot active" id="sd1"></div>
-          <div class="step-dot" id="sd2"></div>
-          <div class="step-dot" id="sd3"></div>
-        </div>
-      </div>
-
+      <div class="topbar"><button class="topbar-back" onclick="showScreen('s-lista')"><i class="ti ti-arrow-left"></i></button><h1>Nuovo DDT</h1><div class="step-indicator"><div class="step-dot active"></div><div class="step-dot"></div><div class="step-dot"></div></div></div>
       <div class="section-label">Documento</div>
-      <div class="field-group">
-        <div class="field-row-inline">
-          <div class="field-item"><label>N. DDT</label><input id="num-ddt" type="text" placeholder="Auto"></div>
-          <div class="field-item"><label>Data</label><input id="data-ddt" type="date"></div>
-        </div>
-      </div>
-
+      <div class="field-group"><div class="field-row-inline"><div class="field-item"><label>N. DDT (automatico)</label><input id="num-ddt" type="text" placeholder="..." readonly style="color:var(--blue);font-weight:600"></div><div class="field-item"><label>Data</label><input id="data-ddt" type="date"></div></div></div>
       <div class="section-label">Mittente</div>
-      <div class="field-group">
-        <div class="field-item"><label>Ragione sociale</label><input id="mitt-nome" type="text" placeholder="La tua azienda S.r.l."></div>
-        <div class="field-item"><label>P. IVA</label><input id="mitt-piva" type="text" placeholder="IT012345678"></div>
-      </div>
-
-      <div class="section-label" style="display:flex;align-items:center;justify-content:space-between;padding-right:16px">
-        <span>Destinatario</span>
-        <button class="btn-outline" onclick="showScreen('s-scegli-cli');renderScegliCli()"><i class="ti ti-address-book"></i> Dalla rubrica</button>
-      </div>
-      <div class="field-group">
-        <div class="field-item"><label>Ragione sociale</label><input id="dest-nome" type="text" placeholder="Cliente S.r.l."></div>
-        <div class="field-item"><label>P. IVA</label><input id="dest-piva" type="text" placeholder="IT987654321"></div>
-        <div class="field-item"><label>Email</label><input id="dest-email" type="email" placeholder="cliente@email.it"></div>
-        <div class="field-item"><label>WhatsApp</label><input id="dest-wa" type="tel" placeholder="+39 333 1234567"></div>
-      </div>
-
-      <div class="section-label" style="display:flex;align-items:center;justify-content:space-between;padding-right:16px">
-        <span>Luogo di partenza</span>
-        <button class="btn-outline" onclick="apriScegliLuogo('partenza')"><i class="ti ti-map-pin"></i> Dalla lista</button>
-      </div>
-      <div class="field-group">
-        <div class="field-item"><label>Indirizzo partenza</label><input id="luogo-partenza" type="text" placeholder="Sede / Magazzino / Cantiere..."></div>
-      </div>
-
-      <div class="section-label" style="display:flex;align-items:center;justify-content:space-between;padding-right:16px">
-        <span>Luogo di destinazione</span>
-        <button class="btn-outline" onclick="apriScegliLuogo('destinazione')"><i class="ti ti-map-pin"></i> Dalla lista</button>
-      </div>
-      <div class="field-group">
-        <div class="field-item"><label>Indirizzo destinazione</label><input id="luogo-destinazione" type="text" placeholder="Sede cliente / Cantiere..."></div>
-      </div>
-
+      <div class="field-group"><div class="field-item"><label>Ragione sociale</label><input id="mitt-nome" type="text" placeholder="La tua azienda S.r.l."></div><div class="field-item"><label>P. IVA</label><input id="mitt-piva" type="text" placeholder="IT012345678"></div></div>
+      <div class="section-label" style="display:flex;align-items:center;justify-content:space-between;padding-right:16px"><span>Destinatario</span><button class="btn-outline" onclick="showScreen('s-scegli-cli');renderScegliCli()"><i class="ti ti-address-book"></i> Dalla rubrica</button></div>
+      <div class="field-group"><div class="field-item"><label>Ragione sociale</label><input id="dest-nome" type="text" placeholder="Cliente S.r.l."></div><div class="field-item"><label>P. IVA</label><input id="dest-piva" type="text" placeholder="IT987654321"></div><div class="field-item"><label>Email</label><input id="dest-email" type="email" placeholder="cliente@email.it"></div><div class="field-item"><label>WhatsApp</label><input id="dest-wa" type="tel" placeholder="+39 333 1234567"></div></div>
+      <div class="section-label" style="display:flex;align-items:center;justify-content:space-between;padding-right:16px"><span>Luogo di partenza</span><button class="btn-outline" onclick="apriScegliLuogo('partenza')"><i class="ti ti-map-pin"></i> Dalla lista</button></div>
+      <div class="field-group"><div class="field-item"><label>Indirizzo partenza</label><input id="luogo-partenza" type="text" placeholder="Sede / Magazzino / Cantiere..."></div></div>
+      <div class="section-label" style="display:flex;align-items:center;justify-content:space-between;padding-right:16px"><span>Luogo di destinazione</span><button class="btn-outline" onclick="apriScegliLuogo('destinazione')"><i class="ti ti-map-pin"></i> Dalla lista</button></div>
+      <div class="field-group"><div class="field-item"><label>Indirizzo destinazione</label><input id="luogo-destinazione" type="text" placeholder="Sede cliente / Cantiere..."></div></div>
       <div class="section-label">Trasporto</div>
-      <div class="field-group">
-        <div class="field-item">
-          <label>Causale</label>
-          <select id="causale" style="color:var(--gray-900)">
-            <option>Vendita</option><option>Reso</option><option>Conto lavoro</option><option>Omaggio</option><option>Visione</option>
-          </select>
-        </div>
-        <div class="field-item"><label>Vettore</label><input id="vettore" type="text" placeholder="Mittente / Corriere / Destinatario"></div>
-      </div>
-
+      <div class="field-group"><div class="field-item"><label>Causale</label><select id="causale" style="color:var(--gray-900)"><option>Vendita</option><option>Reso</option><option>Conto lavoro</option><option>Omaggio</option><option>Visione</option></select></div><div class="field-item"><label>Vettore</label><input id="vettore" type="text" placeholder="Mittente / Corriere / Destinatario"></div></div>
       <div class="spacer"></div>
       <button class="btn-primary" onclick="goStep2()"><i class="ti ti-arrow-right"></i> Avanti: articoli</button>
       <div class="spacer-lg"></div>
     </div>
 
-    <!-- ===== DDT STEP 2 - ARTICOLI ===== -->
     <div class="screen" id="s-ddt-step2">
-      <div class="topbar">
-        <button class="topbar-back" onclick="showScreen('s-ddt-step1')"><i class="ti ti-arrow-left"></i></button>
-        <h1>Articoli</h1>
-        <div class="step-indicator">
-          <div class="step-dot done"></div>
-          <div class="step-dot active"></div>
-          <div class="step-dot"></div>
-        </div>
-      </div>
-
-      <div class="mic-wrap">
-        <button class="mic-btn" id="mic-btn" onclick="toggleMic()">
-          <i class="ti ti-microphone" id="mic-icon"></i>
-        </button>
-        <div class="mic-label" id="mic-label">Tocca il microfono e detta un articolo</div>
-      </div>
+      <div class="topbar"><button class="topbar-back" onclick="showScreen('s-ddt-step1')"><i class="ti ti-arrow-left"></i></button><h1>Articoli</h1><div class="step-indicator"><div class="step-dot done"></div><div class="step-dot active"></div><div class="step-dot"></div></div></div>
+      <div class="mic-wrap"><button class="mic-btn" id="mic-btn" onclick="toggleMic()"><i class="ti ti-microphone" id="mic-icon"></i></button><div class="mic-label" id="mic-label">Tocca il microfono e detta un articolo</div></div>
       <div class="transcript-box" id="transcript">Es: "Viti acciaio 6x50 — cento pezzi"</div>
-
       <div class="section-label">Articoli inseriti</div>
-      <div class="list-card" id="art-list-card">
-        <div id="art-list"></div>
-      </div>
-
-      <button class="btn-add-art" onclick="toggleAddForm()">
-        <i class="ti ti-keyboard"></i> Inserimento manuale
-      </button>
+      <div class="list-card"><div id="art-list"></div></div>
+      <button class="btn-add-art" onclick="toggleAddForm()"><i class="ti ti-keyboard"></i> Inserimento manuale</button>
       <div id="add-form-wrap" style="display:none">
-        <div class="field-group">
-          <div class="field-item"><label>Descrizione articolo</label><input id="art-desc" type="text" placeholder="Nome articolo"></div>
-          <div class="field-row-inline">
-            <div class="field-item"><label>Quantità</label><input id="art-qty" type="number" placeholder="0" min="0"></div>
-            <div class="field-item">
-              <label>U.M.</label>
-              <select id="art-um" style="color:var(--gray-900)"><option>pz</option><option>kg</option><option>lt</option><option>mt</option><option>m²</option><option>sc</option></select>
-            </div>
-          </div>
-        </div>
+        <div class="field-group"><div class="field-item"><label>Descrizione articolo</label><input id="art-desc" type="text" placeholder="Nome articolo"></div><div class="field-row-inline"><div class="field-item"><label>Quantità</label><input id="art-qty" type="number" placeholder="0" min="0"></div><div class="field-item"><label>U.M.</label><select id="art-um" style="color:var(--gray-900)"><option>pz</option><option>kg</option><option>lt</option><option>mt</option><option>m²</option><option>sc</option></select></div></div></div>
         <button class="btn-primary" onclick="addArticolo()"><i class="ti ti-plus"></i> Aggiungi articolo</button>
         <div class="spacer"></div>
       </div>
-
       <div class="spacer"></div>
       <button class="btn-primary" onclick="goStep3()"><i class="ti ti-arrow-right"></i> Avanti: firma e invio</button>
       <div class="spacer-lg"></div>
     </div>
 
-    <!-- ===== DDT STEP 3 - FIRMA + ANTEPRIMA + INVIO ===== -->
     <div class="screen" id="s-ddt-step3">
-      <div class="topbar">
-        <button class="topbar-back" onclick="showScreen('s-ddt-step2')"><i class="ti ti-arrow-left"></i></button>
-        <h1>Firma e Invia</h1>
-        <div class="step-indicator">
-          <div class="step-dot done"></div>
-          <div class="step-dot done"></div>
-          <div class="step-dot active"></div>
-        </div>
-      </div>
-
-      <!-- ANTEPRIMA DDT -->
+      <div class="topbar"><button class="topbar-back" onclick="showScreen('s-ddt-step2')"><i class="ti ti-arrow-left"></i></button><h1>Firma e Invia</h1><div class="step-indicator"><div class="step-dot done"></div><div class="step-dot done"></div><div class="step-dot active"></div></div></div>
       <div class="section-label">Anteprima DDT</div>
       <div class="preview-header">
-        <div style="display:flex;align-items:flex-start;gap:12px;flex:1">
-          <img id="prev-logo" src="" style="display:none;width:52px;height:52px;object-fit:contain;border-radius:6px;border:0.5px solid var(--gray-200);background:white">
-          <div>
-            <div style="font-size:11px;color:var(--gray-400);font-weight:500;text-transform:uppercase;letter-spacing:.04em;margin-bottom:2px">Mittente</div>
-            <div style="font-size:14px;font-weight:600" id="prev-mitt">—</div>
-            <div style="font-size:12px;color:var(--gray-400)" id="prev-mitt-piva"></div>
-          </div>
-        </div>
-        <div style="text-align:right;flex-shrink:0">
-          <div style="font-size:18px;font-weight:700;color:var(--blue)">DDT</div>
-          <div style="font-size:14px;font-weight:600" id="prev-num">—</div>
-          <div style="font-size:12px;color:var(--gray-400)" id="prev-data">—</div>
-        </div>
+        <div style="display:flex;align-items:flex-start;gap:12px;flex:1"><img id="prev-logo" src="" style="display:none;width:52px;height:52px;object-fit:contain;border-radius:6px;border:0.5px solid var(--gray-200);background:white"><div><div style="font-size:11px;color:var(--gray-400);font-weight:500;text-transform:uppercase;letter-spacing:.04em;margin-bottom:2px">Mittente</div><div style="font-size:14px;font-weight:600" id="prev-mitt">—</div><div style="font-size:12px;color:var(--gray-400)" id="prev-mitt-piva"></div></div></div>
+        <div style="text-align:right;flex-shrink:0"><div style="font-size:18px;font-weight:700;color:var(--blue)">DDT</div><div style="font-size:14px;font-weight:600" id="prev-num">—</div><div style="font-size:12px;color:var(--gray-400)" id="prev-data">—</div></div>
       </div>
-
       <div class="preview-grid">
-        <div class="preview-box">
-          <div class="pb-label">Destinatario</div>
-          <div class="pb-val" id="prev-dest">—</div>
-        </div>
-        <div class="preview-box">
-          <div class="pb-label">Causale</div>
-          <div class="pb-val" id="prev-causale">—</div>
-        </div>
-        <div class="preview-box">
-          <div class="pb-label">Partenza</div>
-          <div class="pb-val" id="prev-partenza" style="font-size:12px">—</div>
-        </div>
-        <div class="preview-box">
-          <div class="pb-label">Destinazione</div>
-          <div class="pb-val" id="prev-destinazione" style="font-size:12px">—</div>
-        </div>
+        <div class="preview-box"><div class="pb-label">Destinatario</div><div class="pb-val" id="prev-dest">—</div></div>
+        <div class="preview-box"><div class="pb-label">Causale</div><div class="pb-val" id="prev-causale">—</div></div>
+        <div class="preview-box"><div class="pb-label">Partenza</div><div class="pb-val" id="prev-partenza" style="font-size:12px">—</div></div>
+        <div class="preview-box"><div class="pb-label">Destinazione</div><div class="pb-val" id="prev-destinazione" style="font-size:12px">—</div></div>
       </div>
-
-      <table class="preview-table">
-        <thead><tr>
-          <th style="width:55%">Descrizione</th>
-          <th style="text-align:right;width:25%">Qtà</th>
-          <th style="text-align:center;width:20%">U.M.</th>
-        </tr></thead>
-        <tbody id="prev-art-tbody"></tbody>
-      </table>
-
-      <!-- FIRMA DIGITALE -->
-      <div class="section-label" style="display:flex;align-items:center;justify-content:space-between;padding-right:16px">
-        <span>Firma del destinatario</span>
-        <button class="btn-ghost" onclick="clearFirma()"><i class="ti ti-eraser"></i> Cancella</button>
-      </div>
-      <div class="firma-wrap">
+      <table class="preview-table"><thead><tr><th style="width:55%">Descrizione</th><th style="text-align:right;width:25%">Qtà</th><th style="text-align:center;width:20%">U.M.</th></tr></thead><tbody id="prev-art-tbody"></tbody></table>
+      <div class="section-label" style="display:flex;align-items:center;justify-content:space-between;padding-right:16px"><span>Firma del destinatario</span><button class="btn-ghost" onclick="clearFirma()"><i class="ti ti-eraser"></i> Cancella</button></div>
+      <div class="firma-wrap" style="margin:0 12px">
         <canvas id="firma-canvas" width="1" height="130"></canvas>
-        <div id="firma-hint" style="position:relative;margin-top:-110px;text-align:center;color:var(--gray-400);font-size:13px;pointer-events:none">
-          <i class="ti ti-writing" style="font-size:20px;display:block;margin-bottom:4px"></i>
-          Firma qui con il dito
-        </div>
+        <div id="firma-hint" style="position:relative;margin-top:-110px;text-align:center;color:var(--gray-400);font-size:13px;pointer-events:none"><i class="ti ti-writing" style="font-size:20px;display:block;margin-bottom:4px"></i>Firma qui con il dito</div>
       </div>
-
       <div class="spacer"></div>
-      <!-- INVIO -->
       <div class="section-label">Invia a</div>
       <div class="list-card">
-        <div class="contact-row">
-          <div style="display:flex;align-items:center;gap:8px">
-            <i class="ti ti-mail" style="font-size:18px;color:var(--blue)"></i>
-            <span id="inv-email" style="font-size:14px">—</span>
-          </div>
-          <span style="font-size:11px;color:var(--gray-400)">Email</span>
-        </div>
-        <div class="contact-row">
-          <div style="display:flex;align-items:center;gap:8px">
-            <i class="ti ti-brand-whatsapp" style="font-size:18px;color:var(--green)"></i>
-            <span id="inv-wa" style="font-size:14px">—</span>
-          </div>
-          <span style="font-size:11px;color:var(--gray-400)">WhatsApp</span>
-        </div>
+        <div class="contact-row"><div style="display:flex;align-items:center;gap:8px"><i class="ti ti-mail" style="font-size:18px;color:var(--blue)"></i><span id="inv-email" style="font-size:14px">—</span></div><span style="font-size:11px;color:var(--gray-400)">Email</span></div>
+        <div class="contact-row"><div style="display:flex;align-items:center;gap:8px"><i class="ti ti-brand-whatsapp" style="font-size:18px;color:var(--green)"></i><span id="inv-wa" style="font-size:14px">—</span></div><span style="font-size:11px;color:var(--gray-400)">WhatsApp</span></div>
       </div>
-
       <div class="spacer"></div>
       <div style="display:flex;flex-direction:column;gap:8px">
         <button class="btn-primary" onclick="inviaEmail()"><i class="ti ti-mail"></i> Invia per Email</button>
@@ -588,13 +343,8 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
       <div class="spacer-lg"></div>
     </div>
 
-    <!-- ===== DETTAGLIO DDT STORICO ===== -->
     <div class="screen" id="s-ddt-detail">
-      <div class="topbar">
-        <button class="topbar-back" onclick="showScreen('s-lista')"><i class="ti ti-arrow-left"></i></button>
-        <h1 id="detail-title">DDT</h1>
-        <button id="detail-del-btn" style="background:none;border:none;cursor:pointer;color:var(--red);font-size:22px" onclick="eliminaDDTCorrente()"><i class="ti ti-trash"></i></button>
-      </div>
+      <div class="topbar"><button class="topbar-back" onclick="showScreen('s-lista')"><i class="ti ti-arrow-left"></i></button><h1 id="detail-title">DDT</h1><button id="detail-del-btn" style="background:none;border:none;cursor:pointer;color:var(--red);font-size:22px" onclick="eliminaDDTCorrente()"><i class="ti ti-trash"></i></button></div>
       <div id="detail-content"></div>
       <div class="spacer"></div>
       <div style="display:flex;flex-direction:column;gap:8px">
@@ -605,748 +355,346 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
       <div class="spacer-lg"></div>
     </div>
 
-  </div><!-- /screens -->
-
-  <!-- BOTTOM NAV -->
+  </div>
   <div id="nav-bar">
-    <button class="nav-btn active" id="nb-lista" onclick="showMain('s-lista')">
-      <i class="ti ti-file-text"></i>DDT
-    </button>
-    <button class="nav-btn" id="nb-rubrica" onclick="showMain('s-rubrica')">
-      <i class="ti ti-address-book"></i>Rubrica
-    </button>
-    <button class="nav-btn" id="nb-luoghi" onclick="showMain('s-luoghi')">
-      <i class="ti ti-map-pin"></i>Luoghi
-    </button>
-    <button class="nav-btn" id="nb-azienda" onclick="showMain('s-azienda')">
-      <i class="ti ti-building"></i>Azienda
-    </button>
+    <button class="nav-btn active" id="nb-lista" onclick="showMain('s-lista')"><i class="ti ti-file-text"></i>DDT</button>
+    <button class="nav-btn" id="nb-rubrica" onclick="showMain('s-rubrica')"><i class="ti ti-address-book"></i>Rubrica</button>
+    <button class="nav-btn" id="nb-luoghi" onclick="showMain('s-luoghi')"><i class="ti ti-map-pin"></i>Luoghi</button>
+    <button class="nav-btn" id="nb-azienda" onclick="showMain('s-azienda')"><i class="ti ti-building"></i>Azienda</button>
   </div>
 </div>
 
-<!-- TOAST -->
 <div class="toast" id="toast"></div>
 
-<script>
-// ===================== STATE =====================
-let S = {
-  azienda: { nome:'', piva:'', indirizzo:'', email:'', tel:'' },
-  logoData: null,
-  clienti: [],
-  luoghi: [],
-  storico: [],
-  nextNum: 1,
-  nextCliId: 1,
-  nextLuogoId: 1,
-  editCliId: null,
-  editLuogoId: null,
-  tipoLuogoSel: 'sede',
-  luogoTarget: null,
-  // DDT corrente
-  ddt: { articoli: [], firmaData: null },
-  ddtDetailId: null
+<script type="module">
+import{initializeApp}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import{getAuth,createUserWithEmailAndPassword,signInWithEmailAndPassword,signOut,onAuthStateChanged,updateProfile}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import{getFirestore,doc,getDoc,setDoc,collection,addDoc,query,where,orderBy,getDocs,deleteDoc,runTransaction,serverTimestamp}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const firebaseConfig={apiKey:"AIzaSyDsvM2f0sMRf-i2CkWchbBEJWX0B7opQcA",authDomain:"app-ddt.firebaseapp.com",projectId:"app-ddt",storageBucket:"app-ddt.firebasestorage.app",messagingSenderId:"70582165151",appId:"1:70582165151:web:5eb1081ebdb305252d0caa"};
+const fbApp=initializeApp(firebaseConfig);
+const auth=getAuth(fbApp);
+const db=getFirestore(fbApp);
+
+let S={user:null,azienda:{nome:'',piva:'',indirizzo:'',email:'',tel:''},logoData:null,clienti:[],luoghi:[],storico:[],editCliId:null,editLuogoId:null,tipoLuogoSel:'sede',luogoTarget:null,ddt:{articoli:[],firmaData:null},ddtDetailId:null,loginMode:'login'};
+
+onAuthStateChanged(auth,async(user)=>{
+  document.getElementById('loading-screen').style.display='none';
+  if(user){
+    S.user=user;
+    document.getElementById('login-screen').style.display='none';
+    document.getElementById('app').style.display='flex';
+    document.getElementById('user-email-bar').textContent='👤 '+(user.displayName||user.email);
+    await caricaDati();
+    renderStorico();renderRubrica();renderLuoghi();
+  }else{
+    S.user=null;
+    document.getElementById('app').style.display='none';
+    document.getElementById('login-screen').style.display='block';
+  }
+});
+
+window.toggleLoginMode=function(){
+  S.loginMode=S.loginMode==='login'?'register':'login';
+  const r=S.loginMode==='register';
+  document.getElementById('login-subtitle').textContent=r?'Crea il tuo account':'Accedi al tuo account aziendale';
+  document.getElementById('login-btn').textContent=r?'Registrati':'Accedi';
+  document.getElementById('switch-text').textContent=r?'Hai già un account? ':'Non hai un account? ';
+  document.getElementById('switch-link').textContent=r?'Accedi':'Registrati';
+  document.getElementById('field-nome').style.display=r?'block':'none';
+  document.getElementById('login-err').textContent='';
 };
 
-// Carica da localStorage
-function loadState() {
-  try {
-    const saved = localStorage.getItem('ddt_state');
-    if (saved) {
-      const p = JSON.parse(saved);
-      S.azienda = p.azienda || S.azienda;
-      S.logoData = p.logoData || null;
-      S.clienti = p.clienti || [];
-      S.luoghi = p.luoghi || [];
-      S.storico = p.storico || [];
-      S.nextNum = p.nextNum || 1;
-      S.nextCliId = p.nextCliId || 1;
-      S.nextLuogoId = p.nextLuogoId || 1;
+window.doLogin=async function(){
+  const email=document.getElementById('login-email').value.trim();
+  const password=document.getElementById('login-password').value;
+  const nome=document.getElementById('login-nome').value.trim();
+  const errEl=document.getElementById('login-err');
+  errEl.textContent='';
+  if(!email||!password){errEl.textContent='Inserisci email e password';return;}
+  try{
+    if(S.loginMode==='register'){
+      if(!nome){errEl.textContent='Inserisci il tuo nome';return;}
+      const cred=await createUserWithEmailAndPassword(auth,email,password);
+      await updateProfile(cred.user,{displayName:nome});
+    }else{
+      await signInWithEmailAndPassword(auth,email,password);
     }
-  } catch(e) {}
-  applyLogoBar();
-  prefillAziendaForm();
+  }catch(e){
+    const msgs={'auth/email-already-in-use':'Email già registrata','auth/invalid-email':'Email non valida','auth/weak-password':'Password troppo corta (min 6 caratteri)','auth/user-not-found':'Account non trovato','auth/wrong-password':'Password errata','auth/invalid-credential':'Email o password errati'};
+    errEl.textContent=msgs[e.code]||'Errore: '+e.message;
+  }
+};
+
+window.doLogout=async function(){await signOut(auth);toast('Uscito ✓');};
+
+async function caricaDati(){
+  try{
+    const azDoc=await getDoc(doc(db,'azienda','config'));
+    if(azDoc.exists()){S.azienda=azDoc.data();S.logoData=S.azienda.logoData||null;applyLogoBar();prefillAziendaForm();}
+    const cliSnap=await getDocs(collection(db,'clienti'));
+    S.clienti=cliSnap.docs.map(d=>({id:d.id,...d.data()}));
+    const luoghiSnap=await getDocs(collection(db,'luoghi'));
+    S.luoghi=luoghiSnap.docs.map(d=>({id:d.id,...d.data()}));
+    const q=query(collection(db,'ddt'),where('userId','==',S.user.uid),orderBy('savedAt','desc'));
+    const ddtSnap=await getDocs(q);
+    S.storico=ddtSnap.docs.map(d=>({firestoreId:d.id,...d.data()}));
+  }catch(e){console.log('Errore caricamento:',e);}
 }
 
-function saveState() {
-  try {
-    localStorage.setItem('ddt_state', JSON.stringify({
-      azienda: S.azienda, logoData: S.logoData, clienti: S.clienti,
-      luoghi: S.luoghi, storico: S.storico, nextNum: S.nextNum,
-      nextCliId: S.nextCliId, nextLuogoId: S.nextLuogoId
-    }));
-  } catch(e) {}
+async function getNextNumero(){
+  try{
+    const ref=doc(db,'config','counter');
+    let n=1;
+    await runTransaction(db,async(t)=>{
+      const d=await t.get(ref);
+      n=d.exists()?(d.data().lastNum||0)+1:1;
+      t.set(ref,{lastNum:n});
+    });
+    return String(n).padStart(4,'0');
+  }catch(e){return String(Date.now()).slice(-4);}
 }
 
-// ===================== NAVIGATION =====================
-function showMain(id) {
+window.showMain=function(id){
   showScreen(id);
-  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-  const map = { 's-lista':'nb-lista','s-rubrica':'nb-rubrica','s-luoghi':'nb-luoghi','s-azienda':'nb-azienda' };
-  if (map[id]) document.getElementById(map[id]).classList.add('active');
-  if (id === 's-lista') renderStorico();
-  if (id === 's-rubrica') renderRubrica();
-  if (id === 's-luoghi') renderLuoghi();
-}
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  const map={'s-lista':'nb-lista','s-rubrica':'nb-rubrica','s-luoghi':'nb-luoghi','s-azienda':'nb-azienda'};
+  if(map[id])document.getElementById(map[id]).classList.add('active');
+  if(id==='s-lista')renderStorico();
+  if(id==='s-rubrica')renderRubrica();
+  if(id==='s-luoghi')renderLuoghi();
+};
 
-function showScreen(id) {
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+window.showScreen=function(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
-  document.getElementById('screens').scrollTop = 0;
-}
+  document.getElementById('screens').scrollTop=0;
+};
 
-// ===================== TOAST =====================
-function toast(msg) {
-  const el = document.getElementById('toast');
-  el.textContent = msg;
-  el.classList.add('show');
-  setTimeout(() => el.classList.remove('show'), 2500);
-}
+function toast(msg){const el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),2500);}
 
-// ===================== LOGO =====================
-function handleLogo(e) {
-  const file = e.target.files[0]; if (!file) return;
-  if (file.size > 2*1024*1024) { toast('File troppo grande (max 2MB)'); return; }
-  const r = new FileReader();
-  r.onload = ev => {
-    S.logoData = ev.target.result;
-    saveState();
-    applyLogoBar();
-    document.getElementById('logo-up-zone').style.display = 'none';
-    document.getElementById('logo-prev-zone').style.display = 'block';
-    document.getElementById('logo-prev-img').src = S.logoData;
-    toast('Logo caricato ✓');
-  };
+window.handleLogo=function(e){
+  const file=e.target.files[0];if(!file)return;
+  if(file.size>2*1024*1024){toast('File troppo grande (max 2MB)');return;}
+  const r=new FileReader();
+  r.onload=ev=>{S.logoData=ev.target.result;applyLogoBar();document.getElementById('logo-up-zone').style.display='none';document.getElementById('logo-prev-zone').style.display='block';document.getElementById('logo-prev-img').src=S.logoData;toast('Logo caricato ✓');};
   r.readAsDataURL(file);
+};
+
+window.rimuoviLogo=function(){S.logoData=null;applyLogoBar();document.getElementById('logo-up-zone').style.display='block';document.getElementById('logo-prev-zone').style.display='none';document.getElementById('logo-file').value='';};
+
+function applyLogoBar(){
+  const bar=document.getElementById('app-logo-bar');
+  if(S.logoData){document.getElementById('alb-img').src=S.logoData;document.getElementById('alb-nome').textContent=S.azienda.nome||'';bar.style.display='flex';if(document.getElementById('logo-prev-img'))document.getElementById('logo-prev-img').src=S.logoData;document.getElementById('logo-up-zone').style.display='none';document.getElementById('logo-prev-zone').style.display='block';}
+  else bar.style.display='none';
 }
 
-function rimuoviLogo() {
-  S.logoData = null; saveState(); applyLogoBar();
-  document.getElementById('logo-up-zone').style.display = 'block';
-  document.getElementById('logo-prev-zone').style.display = 'none';
-  document.getElementById('logo-file').value = '';
+function prefillAziendaForm(){
+  document.getElementById('az-nome').value=S.azienda.nome||'';
+  document.getElementById('az-piva').value=S.azienda.piva||'';
+  document.getElementById('az-indirizzo').value=S.azienda.indirizzo||'';
+  document.getElementById('az-email').value=S.azienda.email||'';
+  document.getElementById('az-tel').value=S.azienda.tel||'';
 }
 
-function applyLogoBar() {
-  const bar = document.getElementById('app-logo-bar');
-  if (S.logoData) {
-    document.getElementById('alb-img').src = S.logoData;
-    document.getElementById('alb-nome').textContent = S.azienda.nome || '';
-    bar.style.display = 'flex';
-    if (document.getElementById('logo-prev-img')) document.getElementById('logo-prev-img').src = S.logoData;
-    document.getElementById('logo-up-zone').style.display = 'none';
-    document.getElementById('logo-prev-zone').style.display = 'block';
-  } else {
-    bar.style.display = 'none';
-    document.getElementById('logo-up-zone').style.display = 'block';
-    document.getElementById('logo-prev-zone').style.display = 'none';
-  }
+window.salvaAzienda=async function(){
+  S.azienda={nome:document.getElementById('az-nome').value.trim(),piva:document.getElementById('az-piva').value.trim(),indirizzo:document.getElementById('az-indirizzo').value.trim(),email:document.getElementById('az-email').value.trim(),tel:document.getElementById('az-tel').value.trim(),logoData:S.logoData||null};
+  try{await setDoc(doc(db,'azienda','config'),S.azienda);applyLogoBar();toast('Dati azienda salvati ✓');}catch(e){toast('Errore salvataggio');}
+};
+
+function renderLuoghi(){
+  const el=document.getElementById('luoghi-list');
+  if(!S.luoghi.length){el.innerHTML='<div class="empty-state"><i class="ti ti-map-pin-off"></i><p>Nessun luogo salvato.</p></div>';return;}
+  el.innerHTML=S.luoghi.map(l=>`<div><div class="list-item" style="cursor:default"><div class="avatar-icon" style="border-radius:50%"><i class="ti ti-map-pin"></i></div><div style="flex:1"><div style="display:flex;align-items:center;gap:6px"><span style="font-size:14px;font-weight:600">${l.nome}</span><span class="badge badge-${l.tipo}">${l.tipo}</span></div><div style="font-size:12px;color:var(--gray-400);margin-top:1px">${l.indirizzo}${l.note?' · '+l.note:''}</div></div></div><div class="row-actions"><button class="row-act-btn" onclick="apriFrmLuogo('${l.id}')"><i class="ti ti-edit" style="font-size:13px;vertical-align:-1px"></i> Modifica</button><button class="row-act-btn danger" onclick="deleteLuogo('${l.id}')"><i class="ti ti-trash" style="font-size:13px;vertical-align:-1px"></i></button></div></div>`).join('');
 }
 
-// ===================== AZIENDA =====================
-function prefillAziendaForm() {
-  document.getElementById('az-nome').value = S.azienda.nome || '';
-  document.getElementById('az-piva').value = S.azienda.piva || '';
-  document.getElementById('az-indirizzo').value = S.azienda.indirizzo || '';
-  document.getElementById('az-email').value = S.azienda.email || '';
-  document.getElementById('az-tel').value = S.azienda.tel || '';
-}
-
-function salvaAzienda() {
-  S.azienda = {
-    nome: document.getElementById('az-nome').value.trim(),
-    piva: document.getElementById('az-piva').value.trim(),
-    indirizzo: document.getElementById('az-indirizzo').value.trim(),
-    email: document.getElementById('az-email').value.trim(),
-    tel: document.getElementById('az-tel').value.trim()
-  };
-  saveState(); applyLogoBar(); toast('Dati azienda salvati ✓');
-}
-
-// ===================== LUOGHI =====================
-function renderLuoghi() {
-  const el = document.getElementById('luoghi-list');
-  if (!S.luoghi.length) {
-    el.innerHTML = '<div class="empty-state"><i class="ti ti-map-pin-off"></i><p>Nessun luogo salvato.<br>Aggiungi sede, magazzino o cantieri.</p></div>';
-    return;
-  }
-  el.innerHTML = S.luoghi.map(l => `
-    <div>
-      <div class="list-item" style="cursor:default">
-        <div class="avatar-icon" style="border-radius:50%"><i class="ti ti-map-pin"></i></div>
-        <div style="flex:1">
-          <div style="display:flex;align-items:center;gap:6px">
-            <span style="font-size:14px;font-weight:600">${l.nome}</span>
-            <span class="badge badge-${l.tipo}">${l.tipo}</span>
-          </div>
-          <div style="font-size:12px;color:var(--gray-400);margin-top:1px">${l.indirizzo}${l.note ? ' · '+l.note : ''}</div>
-        </div>
-      </div>
-      <div class="row-actions">
-        <button class="row-act-btn" onclick="apriFrmLuogo(${l.id})"><i class="ti ti-edit" style="font-size:13px;vertical-align:-1px"></i> Modifica</button>
-        <button class="row-act-btn danger" onclick="deleteLuogo(${l.id})"><i class="ti ti-trash" style="font-size:13px;vertical-align:-1px"></i></button>
-      </div>
-    </div>`).join('');
-}
-
-function apriFrmLuogo(id) {
-  S.editLuogoId = id;
-  if (id) {
-    const l = S.luoghi.find(x => x.id === id);
-    if (!l) return;
-    selTipoLuogo(l.tipo);
-    document.getElementById('l-nome').value = l.nome;
-    document.getElementById('l-indirizzo').value = l.indirizzo;
-    document.getElementById('l-note').value = l.note || '';
-    document.getElementById('frm-luogo-title').textContent = 'Modifica luogo';
-  } else {
-    selTipoLuogo('sede');
-    ['l-nome','l-indirizzo','l-note'].forEach(f => document.getElementById(f).value = '');
-    document.getElementById('frm-luogo-title').textContent = 'Nuovo luogo';
-  }
+window.apriFrmLuogo=function(id){
+  S.editLuogoId=id;
+  if(id){const l=S.luoghi.find(x=>x.id===id);if(!l)return;selTipoLuogo(l.tipo);document.getElementById('l-nome').value=l.nome;document.getElementById('l-indirizzo').value=l.indirizzo;document.getElementById('l-note').value=l.note||'';document.getElementById('frm-luogo-title').textContent='Modifica luogo';}
+  else{selTipoLuogo('sede');['l-nome','l-indirizzo','l-note'].forEach(f=>document.getElementById(f).value='');document.getElementById('frm-luogo-title').textContent='Nuovo luogo';}
   showScreen('s-frm-luogo');
-}
+};
 
-function selTipoLuogo(t) {
-  S.tipoLuogoSel = t;
-  ['sede','magazzino','cantiere','altro'].forEach(x => {
-    const b = document.getElementById('tb-'+x);
-    if (b) { b.className = 'tipo-btn' + (x === t ? ' sel' : ''); }
-  });
-}
+window.selTipoLuogo=function(t){S.tipoLuogoSel=t;['sede','magazzino','cantiere','altro'].forEach(x=>{const b=document.getElementById('tb-'+x);if(b)b.className='tipo-btn'+(x===t?' sel':'');});};
+window.deleteLuogo=async function(id){try{await deleteDoc(doc(db,'luoghi',id));S.luoghi=S.luoghi.filter(x=>x.id!==id);renderLuoghi();toast('Luogo eliminato');}catch(e){toast('Errore');}};
+window.salvaLuogo=async function(){
+  const nome=document.getElementById('l-nome').value.trim();const indirizzo=document.getElementById('l-indirizzo').value.trim();
+  if(!nome||!indirizzo){toast('Compila nome e indirizzo');return;}
+  const l={tipo:S.tipoLuogoSel,nome,indirizzo,note:document.getElementById('l-note').value.trim()};
+  try{
+    if(S.editLuogoId){await setDoc(doc(db,'luoghi',S.editLuogoId),l);S.luoghi=S.luoghi.map(x=>x.id===S.editLuogoId?{id:S.editLuogoId,...l}:x);}
+    else{const ref=await addDoc(collection(db,'luoghi'),l);S.luoghi.push({id:ref.id,...l});}
+    S.editLuogoId=null;toast('Luogo salvato ✓');showScreen('s-luoghi');renderLuoghi();
+  }catch(e){toast('Errore salvataggio');}
+};
 
-function deleteLuogo(id) {
-  S.luoghi = S.luoghi.filter(x => x.id !== id);
-  saveState(); renderLuoghi(); toast('Luogo eliminato');
-}
-
-function salvaLuogo() {
-  const nome = document.getElementById('l-nome').value.trim();
-  const indirizzo = document.getElementById('l-indirizzo').value.trim();
-  if (!nome || !indirizzo) { toast('Compila nome e indirizzo'); return; }
-  const l = { id: S.editLuogoId || S.nextLuogoId++, tipo: S.tipoLuogoSel, nome, indirizzo, note: document.getElementById('l-note').value.trim() };
-  if (S.editLuogoId) S.luoghi = S.luoghi.map(x => x.id === S.editLuogoId ? l : x);
-  else S.luoghi.push(l);
-  S.editLuogoId = null; saveState(); toast('Luogo salvato ✓'); showScreen('s-luoghi'); renderLuoghi();
-}
-
-function apriScegliLuogo(target) {
-  S.luogoTarget = target;
-  document.getElementById('scegli-luogo-title').textContent = target === 'partenza' ? 'Luogo di partenza' : 'Luogo di destinazione';
-  document.getElementById('luogo-libero-input').value = '';
-  const el = document.getElementById('scegli-luogo-list');
-  if (!S.luoghi.length) {
-    el.innerHTML = '<div class="empty-state" style="padding:24px"><i class="ti ti-map-pin-off"></i><p>Nessun luogo salvato.<br>Scrivi sotto o vai in "Luoghi" per aggiungerne.</p></div>';
-  } else {
-    el.innerHTML = S.luoghi.map(l => `
-      <div class="list-item" onclick="selezionaLuogo('${l.indirizzo.replace(/'/g,"\\'")}')">
-        <div class="avatar-icon" style="border-radius:50%"><i class="ti ti-map-pin"></i></div>
-        <div style="flex:1">
-          <div style="display:flex;align-items:center;gap:6px">
-            <span style="font-size:14px;font-weight:500">${l.nome}</span>
-            <span class="badge badge-${l.tipo}">${l.tipo}</span>
-          </div>
-          <div style="font-size:12px;color:var(--gray-400)">${l.indirizzo}</div>
-        </div>
-        <i class="ti ti-chevron-right" style="color:var(--gray-400)"></i>
-      </div>`).join('');
-  }
+window.apriScegliLuogo=function(target){
+  S.luogoTarget=target;
+  document.getElementById('scegli-luogo-title').textContent=target==='partenza'?'Luogo di partenza':'Luogo di destinazione';
+  document.getElementById('luogo-libero-input').value='';
+  const el=document.getElementById('scegli-luogo-list');
+  if(!S.luoghi.length){el.innerHTML='<div class="empty-state" style="padding:24px"><i class="ti ti-map-pin-off"></i><p>Nessun luogo salvato.</p></div>';}
+  else{el.innerHTML=S.luoghi.map(l=>`<div class="list-item" onclick="selezionaLuogo('${l.indirizzo.replace(/'/g,"\\'")}')"><div class="avatar-icon" style="border-radius:50%"><i class="ti ti-map-pin"></i></div><div style="flex:1"><div style="display:flex;align-items:center;gap:6px"><span style="font-size:14px;font-weight:500">${l.nome}</span><span class="badge badge-${l.tipo}">${l.tipo}</span></div><div style="font-size:12px;color:var(--gray-400)">${l.indirizzo}</div></div><i class="ti ti-chevron-right" style="color:var(--gray-400)"></i></div>`).join('');}
   showScreen('s-scegli-luogo');
+};
+window.selezionaLuogo=function(indirizzo){if(S.luogoTarget==='partenza')document.getElementById('luogo-partenza').value=indirizzo;else document.getElementById('luogo-destinazione').value=indirizzo;showScreen('s-ddt-step1');};
+window.confermaLuogoLibero=function(){const v=document.getElementById('luogo-libero-input').value.trim();if(!v){toast('Scrivi un indirizzo');return;}selezionaLuogo(v);};
+
+function initials(n){return n.split(/\s+/).slice(0,2).map(w=>w[0]||'').join('').toUpperCase();}
+function renderRubrica(){
+  const f=(document.getElementById('search-cli')?.value||'').toLowerCase();
+  const el=document.getElementById('rubrica-list');
+  const list=S.clienti.filter(c=>c.nome.toLowerCase().includes(f));
+  if(!list.length){el.innerHTML='<div class="empty-state"><i class="ti ti-user-off"></i><p>Nessun cliente trovato.</p></div>';return;}
+  el.innerHTML=list.map(c=>`<div><div class="list-item" style="cursor:default"><div class="avatar">${initials(c.nome)}</div><div style="flex:1"><div style="font-size:14px;font-weight:600">${c.nome}</div><div style="font-size:12px;color:var(--gray-400);margin-top:1px">${c.email||c.indirizzo||''}</div></div></div><div class="row-actions"><button class="row-act-btn" onclick="apriFrmCliente('${c.id}')"><i class="ti ti-edit" style="font-size:13px;vertical-align:-1px"></i> Modifica</button><button class="row-act-btn danger" onclick="deleteCli('${c.id}')"><i class="ti ti-trash" style="font-size:13px;vertical-align:-1px"></i></button></div></div>`).join('');
 }
-
-function selezionaLuogo(indirizzo) {
-  if (S.luogoTarget === 'partenza') document.getElementById('luogo-partenza').value = indirizzo;
-  else document.getElementById('luogo-destinazione').value = indirizzo;
-  showScreen('s-ddt-step1');
-}
-
-function confermaLuogoLibero() {
-  const v = document.getElementById('luogo-libero-input').value.trim();
-  if (!v) { toast('Scrivi un indirizzo'); return; }
-  selezionaLuogo(v);
-}
-
-// ===================== RUBRICA =====================
-function initials(n) { return n.split(/\s+/).slice(0,2).map(w => w[0]||'').join('').toUpperCase(); }
-
-function renderRubrica() {
-  const f = (document.getElementById('search-cli')?.value||'').toLowerCase();
-  const el = document.getElementById('rubrica-list');
-  const list = S.clienti.filter(c => c.nome.toLowerCase().includes(f));
-  if (!list.length) {
-    el.innerHTML = '<div class="empty-state"><i class="ti ti-user-off"></i><p>Nessun cliente trovato.</p></div>';
-    return;
-  }
-  el.innerHTML = list.map(c => `
-    <div>
-      <div class="list-item" style="cursor:default">
-        <div class="avatar">${initials(c.nome)}</div>
-        <div style="flex:1">
-          <div style="font-size:14px;font-weight:600">${c.nome}</div>
-          <div style="font-size:12px;color:var(--gray-400);margin-top:1px">${c.email||c.indirizzo||''}</div>
-        </div>
-      </div>
-      <div class="row-actions">
-        <button class="row-act-btn" onclick="usaClienteInDDT(${c.id})"><i class="ti ti-file-plus" style="font-size:13px;vertical-align:-1px"></i> Usa nel DDT</button>
-        <button class="row-act-btn" onclick="apriFrmCliente(${c.id})"><i class="ti ti-edit" style="font-size:13px;vertical-align:-1px"></i> Modifica</button>
-        <button class="row-act-btn danger" onclick="deleteCli(${c.id})"><i class="ti ti-trash" style="font-size:13px;vertical-align:-1px"></i></button>
-      </div>
-    </div>`).join('');
-}
-
-function renderScegliCli() {
-  const f = (document.getElementById('search-scegli-cli')?.value||'').toLowerCase();
-  const el = document.getElementById('scegli-cli-list');
-  const list = S.clienti.filter(c => c.nome.toLowerCase().includes(f));
-  if (!list.length) {
-    el.innerHTML = '<div class="empty-state"><i class="ti ti-user-off"></i><p>Nessun cliente in rubrica.</p></div>';
-    return;
-  }
-  el.innerHTML = list.map(c => `
-    <div class="list-item" onclick="selezionaCliente(${c.id})">
-      <div class="avatar">${initials(c.nome)}</div>
-      <div style="flex:1">
-        <div style="font-size:14px;font-weight:600">${c.nome}</div>
-        <div style="font-size:12px;color:var(--gray-400)">${c.email||''} ${c.wa ? '· '+c.wa : ''}</div>
-      </div>
-      <i class="ti ti-chevron-right" style="color:var(--gray-400)"></i>
-    </div>`).join('');
-}
-
-function selezionaCliente(id) {
-  const c = S.clienti.find(x => x.id === id); if (!c) return;
-  document.getElementById('dest-nome').value = c.nome;
-  document.getElementById('dest-piva').value = c.piva || '';
-  document.getElementById('dest-email').value = c.email || '';
-  document.getElementById('dest-wa').value = c.wa || '';
-  if (c.indirizzo && !document.getElementById('luogo-destinazione').value)
-    document.getElementById('luogo-destinazione').value = c.indirizzo;
-  showScreen('s-ddt-step1'); toast(c.nome + ' selezionato ✓');
-}
-
-function usaClienteInDDT(id) {
-  selezionaCliente(id);
-  showMain('s-lista');
-  nuovoDDT();
-}
-
-function apriFrmCliente(id) {
-  S.editCliId = id;
-  if (id) {
-    const c = S.clienti.find(x => x.id === id); if (!c) return;
-    document.getElementById('c-nome').value = c.nome;
-    document.getElementById('c-piva').value = c.piva || '';
-    document.getElementById('c-indirizzo').value = c.indirizzo || '';
-    document.getElementById('c-email').value = c.email || '';
-    document.getElementById('c-wa').value = c.wa || '';
-    document.getElementById('c-note').value = c.note || '';
-    document.getElementById('frm-cli-title').textContent = 'Modifica cliente';
-  } else {
-    ['c-nome','c-piva','c-indirizzo','c-email','c-wa','c-note'].forEach(f => document.getElementById(f).value = '');
-    document.getElementById('frm-cli-title').textContent = 'Nuovo cliente';
-  }
+window.renderScegliCli=function(){
+  const f=(document.getElementById('search-scegli-cli')?.value||'').toLowerCase();
+  const el=document.getElementById('scegli-cli-list');
+  const list=S.clienti.filter(c=>c.nome.toLowerCase().includes(f));
+  if(!list.length){el.innerHTML='<div class="empty-state"><i class="ti ti-user-off"></i><p>Nessun cliente in rubrica.</p></div>';return;}
+  el.innerHTML=list.map(c=>`<div class="list-item" onclick="selezionaCliente('${c.id}')"><div class="avatar">${initials(c.nome)}</div><div style="flex:1"><div style="font-size:14px;font-weight:600">${c.nome}</div><div style="font-size:12px;color:var(--gray-400)">${c.email||''} ${c.wa?'· '+c.wa:''}</div></div><i class="ti ti-chevron-right" style="color:var(--gray-400)"></i></div>`).join('');
+};
+window.selezionaCliente=function(id){const c=S.clienti.find(x=>x.id===id);if(!c)return;document.getElementById('dest-nome').value=c.nome;document.getElementById('dest-piva').value=c.piva||'';document.getElementById('dest-email').value=c.email||'';document.getElementById('dest-wa').value=c.wa||'';if(c.indirizzo&&!document.getElementById('luogo-destinazione').value)document.getElementById('luogo-destinazione').value=c.indirizzo;showScreen('s-ddt-step1');toast(c.nome+' selezionato ✓');};
+window.apriFrmCliente=function(id){
+  S.editCliId=id;
+  if(id){const c=S.clienti.find(x=>x.id===id);if(!c)return;document.getElementById('c-nome').value=c.nome;document.getElementById('c-piva').value=c.piva||'';document.getElementById('c-indirizzo').value=c.indirizzo||'';document.getElementById('c-email').value=c.email||'';document.getElementById('c-wa').value=c.wa||'';document.getElementById('c-note').value=c.note||'';document.getElementById('frm-cli-title').textContent='Modifica cliente';}
+  else{['c-nome','c-piva','c-indirizzo','c-email','c-wa','c-note'].forEach(f=>document.getElementById(f).value='');document.getElementById('frm-cli-title').textContent='Nuovo cliente';}
   showScreen('s-frm-cliente');
+};
+window.deleteCli=async function(id){try{await deleteDoc(doc(db,'clienti',id));S.clienti=S.clienti.filter(x=>x.id!==id);renderRubrica();toast('Cliente eliminato');}catch(e){toast('Errore');}};
+window.salvaCliente=async function(){
+  const nome=document.getElementById('c-nome').value.trim();if(!nome){toast('Inserisci la ragione sociale');return;}
+  const c={nome,piva:document.getElementById('c-piva').value,indirizzo:document.getElementById('c-indirizzo').value,email:document.getElementById('c-email').value,wa:document.getElementById('c-wa').value,note:document.getElementById('c-note').value};
+  try{
+    if(S.editCliId){await setDoc(doc(db,'clienti',S.editCliId),c);S.clienti=S.clienti.map(x=>x.id===S.editCliId?{id:S.editCliId,...c}:x);}
+    else{const ref=await addDoc(collection(db,'clienti'),c);S.clienti.push({id:ref.id,...c});}
+    S.editCliId=null;toast('Cliente salvato ✓');showScreen('s-rubrica');renderRubrica();
+  }catch(e){toast('Errore salvataggio');}
+};
+
+window.nuovoDDT=async function(){
+  S.ddt={articoli:[],firmaData:null};
+  document.getElementById('num-ddt').value='...';
+  const num=await getNextNumero();
+  document.getElementById('num-ddt').value=num;
+  document.getElementById('data-ddt').value=new Date().toISOString().split('T')[0];
+  document.getElementById('mitt-nome').value=S.azienda.nome||'';
+  document.getElementById('mitt-piva').value=S.azienda.piva||'';
+  ['dest-nome','dest-piva','dest-email','dest-wa','luogo-partenza','luogo-destinazione','vettore'].forEach(f=>{const el=document.getElementById(f);if(el)el.value='';});
+  document.getElementById('causale').selectedIndex=0;
+  renderArtList();clearFirma();showScreen('s-ddt-step1');
+};
+window.goStep2=function(){showScreen('s-ddt-step2');renderArtList();};
+window.goStep3=function(){buildPreview();showScreen('s-ddt-step3');initFirma();};
+
+function renderArtList(){
+  const el=document.getElementById('art-list');
+  if(!S.ddt.articoli.length){el.innerHTML='<div style="padding:16px;text-align:center;color:var(--gray-400);font-size:13px">Nessun articolo aggiunto</div>';return;}
+  el.innerHTML=S.ddt.articoli.map((a,i)=>`<div class="art-row"><span class="art-desc">${a.desc}</span><span class="art-qty">${a.qty}</span><span class="art-um">${a.um}</span><button class="art-del" onclick="removeArt(${i})"><i class="ti ti-trash"></i></button></div>`).join('');
 }
+window.addArticolo=function(){const desc=document.getElementById('art-desc').value.trim();const qty=parseFloat(document.getElementById('art-qty').value)||1;const um=document.getElementById('art-um').value;if(!desc){toast('Inserisci la descrizione');return;}S.ddt.articoli.push({desc,qty,um});document.getElementById('art-desc').value='';document.getElementById('art-qty').value='';renderArtList();toast('Articolo aggiunto ✓');};
+window.removeArt=function(i){S.ddt.articoli.splice(i,1);renderArtList();};
+window.toggleAddForm=function(){const f=document.getElementById('add-form-wrap');f.style.display=f.style.display==='none'?'block':'none';};
 
-function deleteCli(id) {
-  S.clienti = S.clienti.filter(x => x.id !== id);
-  saveState(); renderRubrica(); toast('Cliente eliminato');
-}
-
-function salvaCliente() {
-  const nome = document.getElementById('c-nome').value.trim();
-  if (!nome) { toast('Inserisci la ragione sociale'); return; }
-  const c = { id: S.editCliId || S.nextCliId++, nome, piva: document.getElementById('c-piva').value, indirizzo: document.getElementById('c-indirizzo').value, email: document.getElementById('c-email').value, wa: document.getElementById('c-wa').value, note: document.getElementById('c-note').value };
-  if (S.editCliId) S.clienti = S.clienti.map(x => x.id === S.editCliId ? c : x);
-  else S.clienti.push(c);
-  S.editCliId = null; saveState(); toast('Cliente salvato ✓');
-  showScreen('s-rubrica'); renderRubrica();
-}
-
-// ===================== DDT =====================
-function nuovoDDT() {
-  S.ddt = { articoli: [], firmaData: null };
-  // Numerazione automatica
-  const numPad = String(S.nextNum).padStart(4, '0');
-  document.getElementById('num-ddt').value = numPad;
-  // Data odierna
-  const oggi = new Date().toISOString().split('T')[0];
-  document.getElementById('data-ddt').value = oggi;
-  // Precompila mittente da azienda
-  document.getElementById('mitt-nome').value = S.azienda.nome || '';
-  document.getElementById('mitt-piva').value = S.azienda.piva || '';
-  // Svuota resto
-  ['dest-nome','dest-piva','dest-email','dest-wa','luogo-partenza','luogo-destinazione','vettore'].forEach(f => {
-    const el = document.getElementById(f); if (el) el.value = '';
-  });
-  document.getElementById('causale').selectedIndex = 0;
-  renderArtList();
-  clearFirma();
-  showScreen('s-ddt-step1');
-}
-
-function goStep2() {
-  showScreen('s-ddt-step2');
-  renderArtList();
-}
-
-function goStep3() {
-  buildPreview();
-  showScreen('s-ddt-step3');
-  initFirma();
-}
-
-// ===================== ARTICOLI =====================
-function renderArtList() {
-  const el = document.getElementById('art-list');
-  if (!S.ddt.articoli.length) {
-    el.innerHTML = '<div style="padding:16px;text-align:center;color:var(--gray-400);font-size:13px">Nessun articolo aggiunto</div>';
-    return;
-  }
-  el.innerHTML = S.ddt.articoli.map((a,i) => `
-    <div class="art-row">
-      <span class="art-desc">${a.desc}</span>
-      <span class="art-qty">${a.qty}</span>
-      <span class="art-um">${a.um}</span>
-      <button class="art-del" onclick="removeArt(${i})"><i class="ti ti-trash"></i></button>
-    </div>`).join('');
-}
-
-function addArticolo() {
-  const desc = document.getElementById('art-desc').value.trim();
-  const qty = parseFloat(document.getElementById('art-qty').value) || 1;
-  const um = document.getElementById('art-um').value;
-  if (!desc) { toast('Inserisci la descrizione'); return; }
-  S.ddt.articoli.push({ desc, qty, um });
-  document.getElementById('art-desc').value = '';
-  document.getElementById('art-qty').value = '';
-  renderArtList(); toast('Articolo aggiunto ✓');
-}
-
-function removeArt(i) { S.ddt.articoli.splice(i,1); renderArtList(); }
-
-function toggleAddForm() {
-  const f = document.getElementById('add-form-wrap');
-  f.style.display = f.style.display === 'none' ? 'block' : 'none';
-}
-
-// ===================== MICROFONO =====================
-let isRecording = false, recognition = null;
-
-function toggleMic() {
-  if (!('webkitSpeechRecognition' in window || 'SpeechRecognition' in window)) {
-    document.getElementById('transcript').textContent = 'Riconoscimento vocale non disponibile. Usa Chrome su Android.';
-    return;
-  }
-  if (isRecording) {
-    recognition && recognition.stop();
-    isRecording = false;
-    document.getElementById('mic-btn').classList.remove('recording');
-    document.getElementById('mic-label').textContent = 'Tocca il microfono e detta un articolo';
-    return;
-  }
-  isRecording = true;
-  document.getElementById('mic-btn').classList.add('recording');
-  document.getElementById('mic-label').textContent = 'In ascolto... parla ora';
-  document.getElementById('transcript').textContent = '...';
-  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-  recognition = new SR();
-  recognition.lang = 'it-IT';
-  recognition.interimResults = true;
-  recognition.onresult = (e) => {
-    const t = Array.from(e.results).map(r => r[0].transcript).join('');
-    document.getElementById('transcript').textContent = t;
-    if (e.results[e.results.length-1].isFinal) parseVoice(t);
-  };
-  recognition.onend = () => {
-    isRecording = false;
-    document.getElementById('mic-btn').classList.remove('recording');
-    document.getElementById('mic-label').textContent = 'Tocca il microfono e detta un articolo';
-  };
+let isRecording=false,recognition=null;
+window.toggleMic=function(){
+  if(!('webkitSpeechRecognition' in window||'SpeechRecognition' in window)){document.getElementById('transcript').textContent='Usa Chrome su Android per il riconoscimento vocale.';return;}
+  if(isRecording){recognition&&recognition.stop();isRecording=false;document.getElementById('mic-btn').classList.remove('recording');document.getElementById('mic-label').textContent='Tocca il microfono e detta un articolo';return;}
+  isRecording=true;document.getElementById('mic-btn').classList.add('recording');document.getElementById('mic-label').textContent='In ascolto... parla ora';document.getElementById('transcript').textContent='...';
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;recognition=new SR();recognition.lang='it-IT';recognition.interimResults=true;
+  recognition.onresult=(e)=>{const t=Array.from(e.results).map(r=>r[0].transcript).join('');document.getElementById('transcript').textContent=t;if(e.results[e.results.length-1].isFinal)parseVoice(t);};
+  recognition.onend=()=>{isRecording=false;document.getElementById('mic-btn').classList.remove('recording');document.getElementById('mic-label').textContent='Tocca il microfono e detta un articolo';};
   recognition.start();
+};
+function parseVoice(text){
+  const q=text.match(/(\d+[\.,]?\d*)\s*(pezzi?|kg|litri?|lt|metri?|mt|m2|scatol\w*|pz)?/i);
+  let qty=q?parseFloat(q[1].replace(',','.')):1;let um='pz';
+  if(q&&q[2]){const u=q[2].toLowerCase();if(u.startsWith('kg'))um='kg';else if(u.startsWith('l'))um='lt';else if(u.startsWith('m2'))um='m²';else if(u.startsWith('m'))um='mt';else if(u.startsWith('sc'))um='sc';}
+  let desc=text.replace(/(\d+[\.,]?\d*)\s*(pezzi?|kg|litri?|lt|metri?|mt|m2|scatol\w*|pz)?/ig,'').replace(/\s+/g,' ').trim();
+  if(!desc)desc=text.trim();
+  if(desc.length>2){S.ddt.articoli.push({desc,qty,um});renderArtList();document.getElementById('transcript').textContent='✓ '+desc+' — '+qty+' '+um;toast('Articolo aggiunto ✓');}
 }
 
-function parseVoice(text) {
-  const q = text.match(/(\d+[\.,]?\d*)\s*(pezzi?|kg|litri?|lt|metri?|mt|m2|scatol\w*|pz)?/i);
-  let qty = q ? parseFloat(q[1].replace(',','.')) : 1;
-  let um = 'pz';
-  if (q && q[2]) {
-    const u = q[2].toLowerCase();
-    if (u.startsWith('kg')) um='kg'; else if (u.startsWith('l')) um='lt';
-    else if (u.startsWith('m2')) um='m²'; else if (u.startsWith('m')) um='mt';
-    else if (u.startsWith('sc')) um='sc';
-  }
-  let desc = text.replace(/(\d+[\.,]?\d*)\s*(pezzi?|kg|litri?|lt|metri?|mt|m2|scatol\w*|pz)?/ig,'').replace(/\s+/g,' ').trim();
-  if (!desc) desc = text.trim();
-  if (desc.length > 2) {
-    S.ddt.articoli.push({ desc, qty, um });
-    renderArtList();
-    document.getElementById('transcript').textContent = '✓ Aggiunto: ' + desc + ' — ' + qty + ' ' + um;
-    toast('Articolo aggiunto ✓');
-  }
+let firmaPainting=false,firmaCtx=null;
+function initFirma(){
+  const canvas=document.getElementById('firma-canvas');const wrap=canvas.parentElement;
+  canvas.width=wrap.offsetWidth-24;canvas.height=130;
+  firmaCtx=canvas.getContext('2d');firmaCtx.strokeStyle='#1A1917';firmaCtx.lineWidth=2.5;firmaCtx.lineCap='round';firmaCtx.lineJoin='round';
+  if(S.ddt.firmaData){const img=new Image();img.onload=()=>firmaCtx.drawImage(img,0,0);img.src=S.ddt.firmaData;document.getElementById('firma-hint').style.display='none';}
+  canvas.onpointerdown=e=>{firmaPainting=true;firmaCtx.beginPath();firmaGet(e);document.getElementById('firma-hint').style.display='none';};
+  canvas.onpointermove=e=>{if(!firmaPainting)return;firmaCtx.lineTo(...firmaGet(e));firmaCtx.stroke();};
+  canvas.onpointerup=()=>{firmaPainting=false;S.ddt.firmaData=canvas.toDataURL();};
+  canvas.onpointerleave=()=>{firmaPainting=false;};
+}
+function firmaGet(e){const rect=document.getElementById('firma-canvas').getBoundingClientRect();return[e.clientX-rect.left,e.clientY-rect.top];}
+window.clearFirma=function(){if(!firmaCtx)return;firmaCtx.clearRect(0,0,document.getElementById('firma-canvas').width,130);S.ddt.firmaData=null;document.getElementById('firma-hint').style.display='block';};
+
+function buildPreview(){
+  const num=document.getElementById('num-ddt').value;const data=document.getElementById('data-ddt').value;
+  document.getElementById('prev-num').textContent='n. '+(num||'—');
+  if(data){const p=data.split('-');document.getElementById('prev-data').textContent=p[2]+'/'+p[1]+'/'+p[0];}
+  document.getElementById('prev-mitt').textContent=document.getElementById('mitt-nome').value||'—';
+  document.getElementById('prev-mitt-piva').textContent=document.getElementById('mitt-piva').value?'P.IVA '+document.getElementById('mitt-piva').value:'';
+  document.getElementById('prev-dest').textContent=document.getElementById('dest-nome').value||'—';
+  document.getElementById('prev-causale').textContent=document.getElementById('causale').value||'—';
+  document.getElementById('prev-partenza').textContent=document.getElementById('luogo-partenza').value||'—';
+  document.getElementById('prev-destinazione').textContent=document.getElementById('luogo-destinazione').value||'—';
+  document.getElementById('inv-email').textContent=document.getElementById('dest-email').value||'—';
+  document.getElementById('inv-wa').textContent=document.getElementById('dest-wa').value||'—';
+  const logo=document.getElementById('prev-logo');if(S.logoData){logo.src=S.logoData;logo.style.display='block';}else logo.style.display='none';
+  const tbody=document.getElementById('prev-art-tbody');
+  tbody.innerHTML=S.ddt.articoli.length?S.ddt.articoli.map(a=>`<tr><td>${a.desc}</td><td style="text-align:right">${a.qty}</td><td style="text-align:center">${a.um}</td></tr>`).join(''):'<tr><td colspan="3" style="color:var(--gray-400);text-align:center">Nessun articolo</td></tr>';
 }
 
-// ===================== FIRMA DIGITALE =====================
-let firmaPainting = false, firmaCtx = null;
+function getDDTData(){return{num:document.getElementById('num-ddt').value,data:document.getElementById('data-ddt').value,mitt:document.getElementById('mitt-nome').value,mittPiva:document.getElementById('mitt-piva').value,dest:document.getElementById('dest-nome').value,destPiva:document.getElementById('dest-piva').value,email:document.getElementById('dest-email').value,wa:document.getElementById('dest-wa').value,causale:document.getElementById('causale').value,vettore:document.getElementById('vettore').value,partenza:document.getElementById('luogo-partenza').value,destinazione:document.getElementById('luogo-destinazione').value,articoli:[...S.ddt.articoli],firmaData:S.ddt.firmaData,userId:S.user.uid,userEmail:S.user.email,userName:S.user.displayName||S.user.email};}
+function buildRiepilogo(articoli){return articoli.map(a=>`• ${a.desc}: ${a.qty} ${a.um}`).join('\n');}
 
-function initFirma() {
-  const canvas = document.getElementById('firma-canvas');
-  const wrap = canvas.parentElement;
-  canvas.width = wrap.offsetWidth - 24;
-  canvas.height = 130;
-  firmaCtx = canvas.getContext('2d');
-  firmaCtx.strokeStyle = '#1A1917';
-  firmaCtx.lineWidth = 2.5;
-  firmaCtx.lineCap = 'round';
-  firmaCtx.lineJoin = 'round';
-  if (S.ddt.firmaData) {
-    const img = new Image();
-    img.onload = () => firmaCtx.drawImage(img, 0, 0);
-    img.src = S.ddt.firmaData;
-    document.getElementById('firma-hint').style.display = 'none';
-  }
-  canvas.addEventListener('pointerdown', e => { firmaPainting = true; firmaCtx.beginPath(); firmaGet(e); document.getElementById('firma-hint').style.display='none'; });
-  canvas.addEventListener('pointermove', e => { if (!firmaPainting) return; firmaCtx.lineTo(...firmaGet(e)); firmaCtx.stroke(); });
-  canvas.addEventListener('pointerup', () => { firmaPainting = false; S.ddt.firmaData = canvas.toDataURL(); });
-  canvas.addEventListener('pointerleave', () => { firmaPainting = false; });
+window.inviaEmail=function(dati){const d=dati||getDDTData();const subject=encodeURIComponent(`DDT n. ${d.num} — ${d.mitt}`);const body=encodeURIComponent(`Gentile ${d.dest},\n\nDDT n. ${d.num} del ${d.data}\nMittente: ${d.mitt} (P.IVA ${d.mittPiva})\nCausale: ${d.causale}\nVettore: ${d.vettore||'—'}\nLuogo di partenza: ${d.partenza||'—'}\nLuogo di destinazione: ${d.destinazione||'—'}\n\nARTICOLI\n${buildRiepilogo(d.articoli)}\n\nCordiali saluti,\n${d.mitt}`);window.location.href=`mailto:${d.email}?subject=${subject}&body=${body}`;toast('Apertura email ✓');};
+window.inviaWhatsApp=function(dati){const d=dati||getDDTData();const wa=(d.wa||'').replace(/\s+/g,'');const msg=encodeURIComponent(`*DDT n. ${d.num}* del ${d.data}\nDa: ${d.mitt}\nA: ${d.dest}\nCausale: ${d.causale}\nPartenza: ${d.partenza||'—'}\nDestinazione: ${d.destinazione||'—'}\n\n*Articoli:*\n${buildRiepilogo(d.articoli)}\n\n_Inviato da ${d.userName} tramite App DDT_`);window.open(wa?`https://wa.me/${wa}?text=${msg}`:`https://wa.me/?text=${msg}`,'_blank');toast('Apertura WhatsApp ✓');};
+window.scaricaPDF=function(dati){
+  const d=dati||getDDTData();
+  const logoHtml=S.logoData?`<img src="${S.logoData}" style="height:64px;object-fit:contain;max-width:150px">`:`<div style="width:64px;height:64px;background:#f5f5f5;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:10px;color:#999">LOGO</div>`;
+  const firmaHtml=d.firmaData?`<div style="margin-top:20px;border-top:1px solid #eee;padding-top:12px"><div style="font-size:10px;color:#888;margin-bottom:6px;text-transform:uppercase">Firma destinatario</div><img src="${d.firmaData}" style="height:60px;object-fit:contain"></div>`:'';
+  const rows=d.articoli.map(a=>`<tr><td>${a.desc}</td><td style="text-align:right">${a.qty}</td><td style="text-align:center">${a.um}</td></tr>`).join('');
+  const html=`<!DOCTYPE html><html lang="it"><head><meta charset="UTF-8"><title>DDT ${d.num}</title><style>body{font-family:Arial,sans-serif;font-size:12px;padding:28px 32px;color:#111;max-width:800px;margin:0 auto}.hdr{display:flex;align-items:flex-start;justify-content:space-between;padding-bottom:16px;border-bottom:2px solid #111;margin-bottom:20px}.hdr-left{display:flex;align-items:flex-start;gap:16px}.az{font-size:11px;line-height:1.7;color:#444}.az strong{display:block;font-size:15px;color:#111;font-weight:700;margin-bottom:2px}.ddt-id{text-align:right}.ddt-id h1{font-size:28px;margin:0;color:#185FA5}.ddt-id .num{font-size:16px;font-weight:700}.ddt-id .data{font-size:11px;color:#888}.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}.box{border:1px solid #e5e5e5;border-radius:6px;padding:10px 14px}.box .lbl{font-size:9px;text-transform:uppercase;letter-spacing:.06em;color:#888;font-weight:600;margin-bottom:3px}.box .val{font-size:12px;font-weight:600}table{width:100%;border-collapse:collapse}thead th{background:#f5f5f5;padding:8px 12px;text-align:left;font-size:10px;text-transform:uppercase;color:#666;font-weight:600;border-bottom:2px solid #e5e5e5}td{padding:8px 12px;border-bottom:1px solid #f0f0f0;font-size:12px}.tfoot td{border-top:2px solid #e5e5e5;border-bottom:none;font-size:11px;color:#888;padding-top:10px}</style></head><body><div class="hdr"><div class="hdr-left">${logoHtml}<div class="az"><strong>${d.mitt}</strong>P.IVA: ${d.mittPiva||'—'}<br>${S.azienda.indirizzo||'—'}<br>${S.azienda.email||'—'}<br>${S.azienda.tel||'—'}</div></div><div class="ddt-id"><h1>DDT</h1><div class="num">n. ${d.num}</div><div class="data">Data: ${d.data}</div></div></div><div class="grid"><div class="box"><div class="lbl">Destinatario</div><div class="val">${d.dest}<br><span style="font-weight:400;font-size:11px">P.IVA: ${d.destPiva||'—'}</span></div></div><div class="box"><div class="lbl">Causale / Vettore</div><div class="val">${d.causale}<br><span style="font-weight:400;font-size:11px">${d.vettore||'—'}</span></div></div><div class="box"><div class="lbl">Luogo di partenza</div><div class="val" style="font-weight:400">${d.partenza||'—'}</div></div><div class="box"><div class="lbl">Luogo di destinazione</div><div class="val" style="font-weight:400">${d.destinazione||'—'}</div></div></div><table><thead><tr><th style="width:55%">Descrizione</th><th style="text-align:right;width:25%">Quantità</th><th style="text-align:center;width:20%">U.M.</th></tr></thead><tbody>${rows||'<tr><td colspan="3" style="color:#888;text-align:center">Nessun articolo</td></tr>'}</tbody><tfoot><tr><td colspan="3" class="tfoot">Righe: ${d.articoli.length} — Creato da ${d.userName} — App DDT</td></tr></tfoot></table>${firmaHtml}</body></html>`;
+  const blob=new Blob([html],{type:'text/html'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`DDT_${d.num}.html`;a.click();toast('PDF scaricato ✓');
+};
+
+window.salvaDDTStorico=async function(){
+  const d=getDDTData();if(!d.num){toast('Numero DDT mancante');return;}
+  try{d.savedAt=serverTimestamp();const ref=await addDoc(collection(db,'ddt'),d);S.storico.unshift({firestoreId:ref.id,...d});toast('DDT salvato ✓');setTimeout(()=>{showMain('s-lista');renderStorico();},800);}
+  catch(e){toast('Errore salvataggio: '+e.message);}
+};
+
+function renderStorico(){
+  const f=(document.getElementById('search-storico')?.value||'').toLowerCase();
+  const el=document.getElementById('storico-list');
+  const list=S.storico.filter(d=>(d.num||'').toLowerCase().includes(f)||(d.dest||'').toLowerCase().includes(f)||(d.causale||'').toLowerCase().includes(f));
+  if(!list.length){el.innerHTML='<div class="empty-state"><i class="ti ti-file-off"></i><p>Nessun DDT salvato.<br>Crea il tuo primo DDT!</p></div>';return;}
+  el.innerHTML=list.map(d=>`<div class="ddt-list-item" onclick="apriDettaglioDDT('${d.firestoreId}')"><div class="avatar-icon"><i class="ti ti-file-text"></i></div><div style="flex:1"><div style="font-size:15px;font-weight:600">DDT n. ${d.num}</div><div style="font-size:12px;color:var(--gray-400);margin-top:1px">${d.dest||'—'} · ${d.data} · ${d.causale}</div></div><div style="text-align:right"><span class="badge badge-success">Salvato</span><div style="font-size:11px;color:var(--gray-400);margin-top:3px">${(d.articoli||[]).length} art.</div></div></div>`).join('');
 }
 
-function firmaGet(e) {
-  const rect = document.getElementById('firma-canvas').getBoundingClientRect();
-  return [e.clientX - rect.left, e.clientY - rect.top];
-}
-
-function clearFirma() {
-  if (!firmaCtx) return;
-  firmaCtx.clearRect(0, 0, document.getElementById('firma-canvas').width, 130);
-  S.ddt.firmaData = null;
-  document.getElementById('firma-hint').style.display = 'block';
-}
-
-// ===================== ANTEPRIMA =====================
-function buildPreview() {
-  const num = document.getElementById('num-ddt').value;
-  const data = document.getElementById('data-ddt').value;
-  const mitt = document.getElementById('mitt-nome').value;
-  const mittPiva = document.getElementById('mitt-piva').value;
-  const dest = document.getElementById('dest-nome').value;
-  const causale = document.getElementById('causale').value;
-  const partenza = document.getElementById('luogo-partenza').value;
-  const destinazione = document.getElementById('luogo-destinazione').value;
-  const email = document.getElementById('dest-email').value;
-  const wa = document.getElementById('dest-wa').value;
-
-  document.getElementById('prev-num').textContent = 'n. ' + (num||'—');
-  if (data) { const p=data.split('-'); document.getElementById('prev-data').textContent=p[2]+'/'+p[1]+'/'+p[0]; }
-  document.getElementById('prev-mitt').textContent = mitt||'—';
-  document.getElementById('prev-mitt-piva').textContent = mittPiva ? 'P.IVA '+mittPiva : '';
-  document.getElementById('prev-dest').textContent = dest||'—';
-  document.getElementById('prev-causale').textContent = causale||'—';
-  document.getElementById('prev-partenza').textContent = partenza||'—';
-  document.getElementById('prev-destinazione').textContent = destinazione||'—';
-  document.getElementById('inv-email').textContent = email||'—';
-  document.getElementById('inv-wa').textContent = wa||'—';
-
-  const logo = document.getElementById('prev-logo');
-  if (S.logoData) { logo.src = S.logoData; logo.style.display = 'block'; }
-  else logo.style.display = 'none';
-
-  const tbody = document.getElementById('prev-art-tbody');
-  if (!S.ddt.articoli.length) {
-    tbody.innerHTML = '<tr><td colspan="3" style="color:var(--gray-400);font-style:italic;text-align:center">Nessun articolo</td></tr>';
-  } else {
-    tbody.innerHTML = S.ddt.articoli.map(a => `<tr><td>${a.desc}</td><td style="text-align:right">${a.qty}</td><td style="text-align:center">${a.um}</td></tr>`).join('');
-  }
-}
-
-// ===================== INVIO =====================
-function getDDTData() {
-  return {
-    num: document.getElementById('num-ddt').value,
-    data: document.getElementById('data-ddt').value,
-    mitt: document.getElementById('mitt-nome').value,
-    mittPiva: document.getElementById('mitt-piva').value,
-    dest: document.getElementById('dest-nome').value,
-    destPiva: document.getElementById('dest-piva').value,
-    email: document.getElementById('dest-email').value,
-    wa: document.getElementById('dest-wa').value,
-    causale: document.getElementById('causale').value,
-    vettore: document.getElementById('vettore').value,
-    partenza: document.getElementById('luogo-partenza').value,
-    destinazione: document.getElementById('luogo-destinazione').value,
-    articoli: [...S.ddt.articoli],
-    firmaData: S.ddt.firmaData
-  };
-}
-
-function buildRiepilogo(articoli) {
-  return articoli.map(a => `• ${a.desc}: ${a.qty} ${a.um}`).join('\n');
-}
-
-function inviaEmail(dati) {
-  const d = dati || getDDTData();
-  const subject = encodeURIComponent(`DDT n. ${d.num} — ${d.mitt}`);
-  const body = encodeURIComponent(
-    `Gentile ${d.dest},\n\nDDT n. ${d.num} del ${d.data}\nMittente: ${d.mitt} (P.IVA ${d.mittPiva})\nCausale: ${d.causale}\nVettore: ${d.vettore||'—'}\nLuogo di partenza: ${d.partenza||'—'}\nLuogo di destinazione: ${d.destinazione||'—'}\n\nARTICOLI\n${buildRiepilogo(d.articoli)}\n\nCordiali saluti,\n${d.mitt}`
-  );
-  window.location.href = `mailto:${d.email}?subject=${subject}&body=${body}`;
-  toast('Apertura email ✓');
-}
-
-function inviaWhatsApp(dati) {
-  const d = dati || getDDTData();
-  const wa = (d.wa||'').replace(/\s+/g,'');
-  const msg = encodeURIComponent(
-    `*DDT n. ${d.num}* del ${d.data}\nDa: ${d.mitt}\nA: ${d.dest}\nCausale: ${d.causale}\nPartenza: ${d.partenza||'—'}\nDestinazione: ${d.destinazione||'—'}\n\n*Articoli:*\n${buildRiepilogo(d.articoli)}\n\n_Inviato tramite App DDT_`
-  );
-  window.open(wa ? `https://wa.me/${wa}?text=${msg}` : `https://wa.me/?text=${msg}`, '_blank');
-  toast('Apertura WhatsApp ✓');
-}
-
-function scaricaPDF(dati) {
-  const d = dati || getDDTData();
-  const logoHtml = S.logoData
-    ? `<img src="${S.logoData}" style="height:64px;object-fit:contain;max-width:150px">`
-    : `<div style="width:64px;height:64px;background:#f5f5f5;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:10px;color:#999;text-align:center">LOGO</div>`;
-  const firmaHtml = d.firmaData
-    ? `<div style="margin-top:20px;border-top:1px solid #eee;padding-top:12px"><div style="font-size:10px;color:#888;margin-bottom:6px;text-transform:uppercase;letter-spacing:.04em">Firma destinatario</div><img src="${d.firmaData}" style="height:60px;object-fit:contain"></div>`
-    : '';
-  const rows = d.articoli.map(a => `<tr><td>${a.desc}</td><td style="text-align:right">${a.qty}</td><td style="text-align:center">${a.um}</td></tr>`).join('');
-  const html = `<!DOCTYPE html><html lang="it"><head><meta charset="UTF-8"><title>DDT ${d.num}</title>
-  <style>
-    body{font-family:Arial,sans-serif;font-size:12px;padding:28px 32px;color:#111;max-width:800px;margin:0 auto}
-    .hdr{display:flex;align-items:flex-start;justify-content:space-between;padding-bottom:16px;border-bottom:2px solid #111;margin-bottom:20px}
-    .hdr-left{display:flex;align-items:flex-start;gap:16px}
-    .az{font-size:11px;line-height:1.7;color:#444}
-    .az strong{display:block;font-size:15px;color:#111;font-weight:700;margin-bottom:2px}
-    .ddt-id{text-align:right}
-    .ddt-id h1{font-size:28px;margin:0;color:#185FA5;letter-spacing:-.5px}
-    .ddt-id .num{font-size:16px;font-weight:700}
-    .ddt-id .data{font-size:11px;color:#888}
-    .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
-    .box{border:1px solid #e5e5e5;border-radius:6px;padding:10px 14px}
-    .box .lbl{font-size:9px;text-transform:uppercase;letter-spacing:.06em;color:#888;font-weight:600;margin-bottom:3px}
-    .box .val{font-size:12px;font-weight:600;color:#111}
-    table{width:100%;border-collapse:collapse}
-    thead th{background:#f5f5f5;padding:8px 12px;text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:.05em;color:#666;font-weight:600;border-bottom:2px solid #e5e5e5}
-    td{padding:8px 12px;border-bottom:1px solid #f0f0f0;font-size:12px}
-    .tfoot td{border-top:2px solid #e5e5e5;border-bottom:none;font-size:11px;color:#888;padding-top:10px}
-    @media print{body{padding:16px}}
-  </style></head><body>
-  <div class="hdr">
-    <div class="hdr-left">
-      ${logoHtml}
-      <div class="az"><strong>${d.mitt}</strong>P.IVA: ${d.mittPiva||'—'}<br>${S.azienda.indirizzo||'—'}<br>${S.azienda.email||'—'}<br>${S.azienda.tel||'—'}</div>
-    </div>
-    <div class="ddt-id">
-      <h1>DDT</h1>
-      <div class="num">n. ${d.num}</div>
-      <div class="data">Data: ${d.data}</div>
-    </div>
-  </div>
-  <div class="grid">
-    <div class="box"><div class="lbl">Destinatario</div><div class="val">${d.dest}<br><span style="font-weight:400;font-size:11px">P.IVA: ${d.destPiva||'—'}</span></div></div>
-    <div class="box"><div class="lbl">Causale / Vettore</div><div class="val">${d.causale}<br><span style="font-weight:400;font-size:11px">${d.vettore||'—'}</span></div></div>
-    <div class="box"><div class="lbl">Luogo di partenza</div><div class="val" style="font-weight:400">${d.partenza||'—'}</div></div>
-    <div class="box"><div class="lbl">Luogo di destinazione</div><div class="val" style="font-weight:400">${d.destinazione||'—'}</div></div>
-  </div>
-  <table>
-    <thead><tr><th style="width:55%">Descrizione</th><th style="text-align:right;width:25%">Quantità</th><th style="text-align:center;width:20%">U.M.</th></tr></thead>
-    <tbody>${rows||'<tr><td colspan="3" style="color:#888;text-align:center">Nessun articolo</td></tr>'}</tbody>
-    <tfoot><tr><td colspan="3" class="tfoot">Totale righe: ${d.articoli.length} — Generato con App DDT</td></tr></tfoot>
-  </table>
-  ${firmaHtml}
-  </body></html>`;
-  const blob = new Blob([html], { type: 'text/html' });
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = `DDT_${d.num}.html`;
-  a.click();
-  toast('PDF scaricato ✓');
-}
-
-// ===================== STORICO =====================
-function salvaDDTStorico() {
-  const d = getDDTData();
-  if (!d.num) { toast('Inserisci il numero DDT'); return; }
-  const existing = S.storico.findIndex(x => x.num === d.num);
-  const entry = { ...d, savedAt: new Date().toISOString() };
-  if (existing >= 0) S.storico[existing] = entry;
-  else { S.storico.unshift(entry); S.nextNum++; }
-  saveState();
-  toast('DDT salvato nello storico ✓');
-  setTimeout(() => { showMain('s-lista'); renderStorico(); }, 800);
-}
-
-function renderStorico() {
-  const f = (document.getElementById('search-storico')?.value||'').toLowerCase();
-  const el = document.getElementById('storico-list');
-  const list = S.storico.filter(d =>
-    d.num.toLowerCase().includes(f) ||
-    (d.dest||'').toLowerCase().includes(f) ||
-    (d.causale||'').toLowerCase().includes(f)
-  );
-  if (!list.length) {
-    el.innerHTML = '<div class="empty-state"><i class="ti ti-file-off"></i><p>Nessun DDT salvato.<br>Crea il tuo primo DDT!</p></div>';
-    return;
-  }
-  el.innerHTML = list.map(d => `
-    <div class="ddt-list-item" onclick="apriDettaglioDDT('${d.num}')">
-      <div class="avatar-icon"><i class="ti ti-file-text"></i></div>
-      <div style="flex:1">
-        <div class="ddt-num">DDT n. ${d.num}</div>
-        <div class="ddt-sub">${d.dest||'—'} · ${d.data} · ${d.causale}</div>
-      </div>
-      <div style="text-align:right">
-        <span class="badge badge-success">Salvato</span>
-        <div style="font-size:11px;color:var(--gray-400);margin-top:3px">${d.articoli.length} art.</div>
-      </div>
-    </div>`).join('');
-}
-
-function apriDettaglioDDT(num) {
-  const d = S.storico.find(x => x.num === num); if (!d) return;
-  S.ddtDetailId = num;
-  document.getElementById('detail-title').textContent = 'DDT n. ' + num;
-  const firmaHtml = d.firmaData ? `<div style="background:white;border-radius:10px;padding:12px;margin:0 12px 10px;box-shadow:0 1px 3px rgba(0,0,0,.08)"><div style="font-size:11px;color:var(--gray-400);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px">Firma</div><img src="${d.firmaData}" style="height:60px;object-fit:contain"></div>` : '';
-  const rows = d.articoli.map(a => `<tr><td>${a.desc}</td><td style="text-align:right">${a.qty}</td><td style="text-align:center">${a.um}</td></tr>`).join('');
-  document.getElementById('detail-content').innerHTML = `
-    <div class="spacer"></div>
-    <div class="preview-grid">
-      <div class="preview-box"><div class="pb-label">Mittente</div><div class="pb-val">${d.mitt||'—'}</div></div>
-      <div class="preview-box"><div class="pb-label">Destinatario</div><div class="pb-val">${d.dest||'—'}</div></div>
-      <div class="preview-box"><div class="pb-label">Data</div><div class="pb-val">${d.data||'—'}</div></div>
-      <div class="preview-box"><div class="pb-label">Causale</div><div class="pb-val">${d.causale||'—'}</div></div>
-      <div class="preview-box"><div class="pb-label">Partenza</div><div class="pb-val" style="font-size:12px">${d.partenza||'—'}</div></div>
-      <div class="preview-box"><div class="pb-label">Destinazione</div><div class="pb-val" style="font-size:12px">${d.destinazione||'—'}</div></div>
-    </div>
-    <table class="preview-table">
-      <thead><tr><th>Descrizione</th><th style="text-align:right">Qtà</th><th style="text-align:center">U.M.</th></tr></thead>
-      <tbody>${rows}</tbody>
-    </table>
-    ${firmaHtml}`;
+window.apriDettaglioDDT=function(firestoreId){
+  const d=S.storico.find(x=>x.firestoreId===firestoreId);if(!d)return;
+  S.ddtDetailId=firestoreId;
+  document.getElementById('detail-title').textContent='DDT n. '+d.num;
+  const firmaHtml=d.firmaData?`<div style="background:white;border-radius:10px;padding:12px;margin:0 12px 10px;box-shadow:var(--shadow)"><div style="font-size:11px;color:var(--gray-400);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px">Firma</div><img src="${d.firmaData}" style="height:60px;object-fit:contain"></div>`:'';
+  const rows=(d.articoli||[]).map(a=>`<tr><td>${a.desc}</td><td style="text-align:right">${a.qty}</td><td style="text-align:center">${a.um}</td></tr>`).join('');
+  document.getElementById('detail-content').innerHTML=`<div class="spacer"></div><div class="preview-grid"><div class="preview-box"><div class="pb-label">Mittente</div><div class="pb-val">${d.mitt||'—'}</div></div><div class="preview-box"><div class="pb-label">Destinatario</div><div class="pb-val">${d.dest||'—'}</div></div><div class="preview-box"><div class="pb-label">Data</div><div class="pb-val">${d.data||'—'}</div></div><div class="preview-box"><div class="pb-label">Causale</div><div class="pb-val">${d.causale||'—'}</div></div><div class="preview-box"><div class="pb-label">Partenza</div><div class="pb-val" style="font-size:12px">${d.partenza||'—'}</div></div><div class="preview-box"><div class="pb-label">Destinazione</div><div class="pb-val" style="font-size:12px">${d.destinazione||'—'}</div></div><div class="preview-box"><div class="pb-label">Creato da</div><div class="pb-val" style="font-size:12px">${d.userName||d.userEmail||'—'}</div></div></div><table class="preview-table"><thead><tr><th>Descrizione</th><th style="text-align:right">Qtà</th><th style="text-align:center">U.M.</th></tr></thead><tbody>${rows}</tbody></table>${firmaHtml}`;
   showScreen('s-ddt-detail');
-}
+};
 
-function eliminaDDTCorrente() {
-  if (!confirm('Eliminare questo DDT dallo storico?')) return;
-  S.storico = S.storico.filter(x => x.num !== S.ddtDetailId);
-  saveState(); toast('DDT eliminato'); showMain('s-lista');
-}
+window.eliminaDDTCorrente=async function(){
+  if(!confirm('Eliminare questo DDT?'))return;
+  try{await deleteDoc(doc(db,'ddt',S.ddtDetailId));S.storico=S.storico.filter(x=>x.firestoreId!==S.ddtDetailId);toast('DDT eliminato');showMain('s-lista');}
+  catch(e){toast('Errore eliminazione');}
+};
+window.reinviaEmail=function(){const d=S.storico.find(x=>x.firestoreId===S.ddtDetailId);if(d)inviaEmail(d);};
+window.reinviaWhatsApp=function(){const d=S.storico.find(x=>x.firestoreId===S.ddtDetailId);if(d)inviaWhatsApp(d);};
+window.reinviaScariaPDF=function(){const d=S.storico.find(x=>x.firestoreId===S.ddtDetailId);if(d)scaricaPDF(d);};
 
-function reinviaEmail() { const d = S.storico.find(x => x.num === S.ddtDetailId); if (d) inviaEmail(d); }
-function reinviaWhatsApp() { const d = S.storico.find(x => x.num === S.ddtDetailId); if (d) inviaWhatsApp(d); }
-function reinviaScariaPDF() { const d = S.storico.find(x => x.num === S.ddtDetailId); if (d) scaricaPDF(d); }
-
-// ===================== INIT =====================
-loadState();
-renderStorico();
-renderRubrica();
-renderLuoghi();
-
-// Service Worker registration
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('sw.js').catch(() => {});
-}
+if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
 </script>
 </body>
 </html>
