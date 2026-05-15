@@ -625,7 +625,7 @@ function avviaMicrofono(){
   const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
   recognition=new SR();
   recognition.lang='it-IT';
-  recognition.continuous=false;     // false è più stabile su Android
+  recognition.continuous=false;
   recognition.interimResults=true;
   recognition.maxAlternatives=1;
 
@@ -645,21 +645,34 @@ function avviaMicrofono(){
   };
 
   recognition.onerror=(e)=>{
-    if(e.error==='no-speech'||e.error==='aborted') return;
+    if(e.error==='no-speech'||e.error==='aborted')return;
     console.log('Mic error:',e.error);
   };
 
   recognition.onend=()=>{
-    if(!isRecording) return;
-    // Si è fermato da solo — riavvia dopo breve pausa
+    if(!isRecording)return;
+    // Samsung Chrome si ferma spesso — riavvia subito
     setTimeout(()=>{
       if(isRecording){
-        try{ avviaMicrofono(); }catch(err){ stopMic(); }
+        try{ avviaMicrofono(); }
+        catch(err){ stopMic(); }
       }
-    },150);
+    },200);
   };
 
-  try{ recognition.start(); }catch(e){ stopMic(); }
+  try{
+    recognition.start();
+    // Aggiorna label con animazione punti per far capire che ascolta
+    let dots=0;
+    if(window._micDotInterval) clearInterval(window._micDotInterval);
+    window._micDotInterval=setInterval(()=>{
+      if(!isRecording){clearInterval(window._micDotInterval);return;}
+      dots=(dots+1)%4;
+      const d='.'.repeat(dots);
+      const txt=micFinalText.trim();
+      if(!txt) document.getElementById('transcript').textContent='Parla ora'+d;
+    },400);
+  }catch(e){ stopMic(); }
 }
 
 window.toggleMic=function(){
@@ -695,8 +708,37 @@ function stopMic(){
   document.getElementById('mic-label').textContent='Tocca per iniziare a dettare';
 }
 
+function parolaNumerica(t){
+  const map={'zero':0,'uno':1,'una':1,'due':2,'tre':3,'quattro':4,'cinque':5,'sei':6,'sette':7,'otto':8,'nove':9,'dieci':10,'undici':11,'dodici':12,'tredici':13,'quattordici':14,'quindici':15,'sedici':16,'diciassette':17,'diciotto':18,'diciannove':19,'venti':20,'trenta':30,'quaranta':40,'cinquanta':50,'sessanta':60,'settanta':70,'ottanta':80,'novanta':90,'cento':100,'duecento':200,'trecento':300,'quattrocento':400,'cinquecento':500,'seicento':600,'settecento':700,'ottocento':800,'novecento':900,'mille':1000,'duemila':2000,'tremila':3000};
+  const lower=t.toLowerCase().trim();
+  if(map[lower]!==undefined)return map[lower];
+  // Prova combinazioni tipo "venticinque", "centocinquanta"
+  for(const[k,v] of Object.entries(map)){
+    if(lower.startsWith(k)){
+      const rest=lower.slice(k.length);
+      if(rest&&map[rest]!==undefined)return v+map[rest];
+    }
+  }
+  return null;
+}
+
+function convertiNumeriBescrittiInCifre(text){
+  // Sostituisce numeri scritti in lettere con cifre
+  const numWords=['zero','uno','una','due','tre','quattro','cinque','sei','sette','otto','nove','dieci','undici','dodici','tredici','quattordici','quindici','sedici','diciassette','diciotto','diciannove','venti','trenta','quaranta','cinquanta','sessanta','settanta','ottanta','novanta','cento','duecento','trecento','quattrocento','cinquecento','mille','duemila','tremila','venticinque','cinquanta','centocinquanta','duecento','duecentocinquanta'];
+  let result=text;
+  // Pattern: numero in lettere seguito da unità di misura o fine frase
+  const pattern=new RegExp('\\b('+numWords.join('|')+')\\b','gi');
+  result=result.replace(pattern,(match)=>{
+    const n=parolaNumerica(match);
+    return n!==null?String(n):match;
+  });
+  return result;
+}
+
 function mostraConferma(text){
-  // Parsa testo per trovare quantità e UM
+  // Prima converti numeri in lettere in cifre
+  text=convertiNumeriBescrittiInCifre(text);
+
   const umMap={
     'pezzi':'pz','pezzo':'pz','pz':'pz',
     'kg':'kg','chili':'kg','chilo':'kg','chilogrammi':'kg',
